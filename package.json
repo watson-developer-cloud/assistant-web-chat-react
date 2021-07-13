@@ -1,0 +1,68 @@
+{
+  "name": "@watson-conversation/watson-assistant-web-chat-react",
+  "version": "0.0.12",
+  "description": "A provider to inject web chat into your React application.",
+  "license": "MIT",
+  "repository": "watson-developer-cloud/assistant-web-chat-react",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "publishConfig": {
+    "registry": "https://na.artifactory.swg-devops.com/artifactory/api/npm/wcp-wcs-npm-local/"
+  },
+  "engines": {
+    "node": ">=10",
+    "npm": ">=5"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "lint": "eslint 'src/**/*.{js,ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix",
+    "start": "rollup -c -w",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": ">= 16.8.0",
+    "react-dom": ">= 16.8.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.1.2",
+    "@types/jest": "^26.0.24",
+    "@types/proper-url-join": "^2.1.1",
+    "@types/react": "^16.14.17",
+    "@types/react-dom": "^16.9.14",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "babel-core": "^6.26.3",
+    "babel-runtime": "^6.26.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-jsdoc": "^36.0.6",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "rollup": "^1.29.0",
+    "rollup-plugin-typescript2": "^0.25.3",
+    "ts-jest": "^27.0.5",
+    "typescript": "^4.3.5"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "ibm",
+    "watson",
+    "watson assistant",
+    "web chat"
+  ]
+}
