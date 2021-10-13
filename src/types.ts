@@ -12,8 +12,14 @@
  *
  */
 
-import React from 'react';
-
+/**
+ * The web chat configuration options object.
+ *
+ * Since any version above 5.0.0 of web chat can be loaded via `withWebChat`, this type is a minimal implementation of
+ * the web chat configuration options object.
+ *
+ * @see https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration
+ */
 interface WebChatConfig {
   /**
    * The integration ID of your web chat integration. This is exposed as a UUID. e.g.
@@ -40,18 +46,16 @@ interface WebChatConfig {
   subscriptionID?: string;
 
   /**
-   * The version of the chat widget to use. This value may specify "latest" or it may specify a partial version such
-   * as "5.0" (which would cover anything that is "5.0.x". If no matching version is found, an error will be logged
-   * and the latest version will be used.
-   */
-  clientVersion?: string;
-
-  /**
    * This component allows loading multiple different versions of web chat.
    */
   [key: string]: any;
 }
 
+/**
+ * The web chat instance returned by `createWebChatInstance`.
+ *
+ * @see https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-instance-methods
+ */
 interface WebChatInstance {
   /**
    * This component allows loading multiple different versions of web chat.
@@ -59,17 +63,34 @@ interface WebChatInstance {
   [key: string]: any;
 }
 
+/**
+ * Configuration object for withWebChat higher order component.
+ */
 interface WithWebChatConfig {
+  /**
+   * Adds logging for setup and tear down process of web chat. Helpful for seeing if your application is aggressively
+   * mounting and remounting web chat.
+   */
   debug?: boolean;
+
+  /**
+   * Set the url where web chat assets are hosted. Used for development purposes.
+   */
   baseUrl?: string;
 }
 
+/**
+ * Properties added by the withWebChat higher order component to passed components.
+ */
 interface AddedWithWebChatProps {
+  /**
+   * The method to create a web chat instance.
+   *
+   * @param config - A web chat configuration options object.
+   *
+   * @returns A promise resolving with an instance of web chat.
+   */
   createWebChatInstance: (config: WebChatConfig) => Promise<WebChatInstance>;
-}
-
-interface WithForwardRef {
-  forwardedRef?: React.Ref<unknown>;
 }
 
 declare global {
@@ -84,4 +105,4 @@ declare global {
   }
 }
 
-export { WebChatConfig, WebChatInstance, AddedWithWebChatProps, WithWebChatConfig, WithForwardRef };
+export { WebChatConfig, WebChatInstance, AddedWithWebChatProps, WithWebChatConfig };
