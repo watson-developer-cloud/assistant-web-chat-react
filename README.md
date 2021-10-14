@@ -150,7 +150,7 @@ class App extends Component {
 ### Using with TypeScript
 
 The `withWebChat` package is written in TypeScript and includes types.
-In addition to exporting `withWebChat` from `@watson-conversation/watson-assistant-web-chat-react` we export the following types:
+In addition to `withWebChat`, this package exports the following types:
 
 | Type                  | Description                                                                          |
 |-----------------------|--------------------------------------------------------------------------------------|
