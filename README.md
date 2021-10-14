@@ -2,7 +2,7 @@
 
 # Watson Assistant web chat with React
 
-`@watson-conversation/watson-assistant-web-chat-react` is a React library to extend the [web chat](https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-deploy-web-chat) feature of [Watson Assistant](https://www.ibm.com/cloud/watson-assistant) within your React application. This makes it easier to provide `user_defined` response types written in React, add content to `customElements` with React, have the web chat and your site communicate more easily, and more.
+`@watson-conversation/watson-assistant-web-chat-react` is a React library to extend the [web chat](https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-deploy-web-chat) feature of [IBM Watson Assistant](https://www.ibm.com/cloud/watson-assistant) within your React application. This makes it easier to provide user-defined response types written in React, add content to custom elements with React, have the web chat and your site communicate more easily, and more.
 
 <details>
   <summary>Table of contents</summary>
@@ -27,13 +27,13 @@
 
 ## Installation
 
-To install via `npm`:
+To install using `npm`:
 
 ```bash
 npm install @watson-conversation/watson-assistant-web-chat-react
 ```
 
-Or via `yarn`:
+Or using `yarn`:
 
 ```bash
 yarn add @watson-conversation/watson-assistant-web-chat-react
@@ -42,11 +42,11 @@ yarn add @watson-conversation/watson-assistant-web-chat-react
 
 ### About higher order components
 
-Higher order components (HOC) are a pattern in React to allow a function to take a component as an argument, and return a new component that wraps the passed component and passes it new props. The HOC in this package will pass a prop named `createWebChatInstance`. The `createWebChatInstance` method will take a [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject) as an argument and will return an [instance](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-instance-methods) of web chat that you can now access inside your React application. Your created instance will automatically be destroyed if your React component unmounts.
+Higher-order components (HOC) are a pattern in React for allowing a function to take a component as an argument, and returning a new component that wraps the passed component and passes it new props. The HOC in this package passes a prop named `createWebChatInstance`. The `createWebChatInstance` method takes a [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject) as an argument and returns an [instance](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-instance-methods) of the web chat that you can now access inside your React application. Your created instance is automatically destroyed if your React component unmounts.
 
 ### With a functional component
 
-With a functional component, we can use the `useEffect` React hook to call the `createWebChatInstance` method provided as a prop.
+With a functional component, you can use the `useEffect` React hook to call the `createWebChatInstance` method provided as a prop.
 
 ```javascript
 import React, { useEffect } from 'react';
@@ -77,7 +77,7 @@ const MyLocation = ({ location, createWebChatInstance }) => {
 export default withWebChat()(MyLocation);
 ```
 
-You can now use the `MyLocation` component like you would any other. You can pass through any props you want, and `withWebChat` will add `createWebChatInstance` to the props.
+You can now use the `MyLocation` component like you would any other. You can pass through any props you want, and `withWebChat` adds `createWebChatInstance` to the props.
 
 ```javascript
 import React from 'react';
@@ -96,7 +96,7 @@ const App = () => {
 
 ### With a class component
 
-With a class based component, we will use `componentDidMount` to call the `createWebChatInstance` method provided as a prop.
+With a class-based component, you can use `componentDidMount` to call the `createWebChatInstance` method provided as a prop.
 
 ```javascript
 import React, { Component } from 'react';
@@ -149,7 +149,7 @@ class App extends Component {
 ```
 ### Using with TypeScript
 
-The `withWebChat` package is written with TypeScript and includes types.
+The `withWebChat` package is written in TypeScript and includes types.
 In addition to exporting `withWebChat` from `@watson-conversation/watson-assistant-web-chat-react` we export the following types:
 
 | Type                  | Description                                                                          |
@@ -207,9 +207,9 @@ export default withWebChat(withWebChatConfig)(MyLocation);
 
 ### Writing tests
 
-It is recommended that you mock `createWebChatInstance` in your unit tests and not test the higher order component. If you must include the higher order component in your unit test, you may have to add some extra configuration to your unit test framework to account for the fact that web chat appends additional scripts to your web site.
+It is recommended that you mock `createWebChatInstance` in your unit tests and not test the higher-order component. If you must include the higher-order component in your unit test, you might have to add some extra configuration to your unit test framework to account for the fact that web chat appends additional scripts to your web site.
 
-For instance when using the [Jest testing framework](https://jestjs.io) you must add the following configuration to your `jest.config.js` file.
+For example, when using the [Jest testing framework](https://jestjs.io), you must add the following configuration to your `jest.config.js` file.
 
 ```javascript
 module.exports = {
@@ -224,7 +224,7 @@ module.exports = {
 
 ### withWebChat
 
-The `withWebChat` is a higher order function that returns a higher order component. It takes an optional configuration argument and returns a function that takes a component as an argument. This component will have `createWebChatInstance` injected as a prop.
+The `withWebChat` method is a higher-order function that returns a higher-order component. It takes an optional configuration argument and returns a function that takes a component as an argument. This component will have `createWebChatInstance` injected as a prop.
 
 ```javascript
 // enchance is the higher order component.
@@ -240,11 +240,11 @@ or in short form:
 export default withWebChat(options)(Component)
 ```
 
-This syntax allows you to chain multiple higher order components together. [See the higher order components documentation](https://reactjs.org/docs/higher-order-components.html) from the React team for more information on how higher order components work and can be composed together.
+This syntax enables you to chain multiple higher-order components together. [See the higher-order components documentation](https://reactjs.org/docs/higher-order-components.html) from the React team for more information about how higher-order components work and how they can be composed together.
 
 ### createWebChatInstance
 
-The `createWebChatInstance` method takes a [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject) as an argument and returns a promise. A promise will successfully resolve with the `instance` of web chat, or catch with a descriptive error.
+The `createWebChatInstance` method takes a [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject) as an argument and returns a promise. This promise either will successfully resolve with the instance of the web chat, or will throw a descriptive error.
 
 ```javascript
 createWebChatInstance(config).then(instance => {}).catch(error => {});
