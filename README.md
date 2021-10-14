@@ -242,6 +242,15 @@ export default withWebChat(options)(Component)
 
 This syntax allows you to chain multiple higher order components together. [See the higher order components documentation](https://reactjs.org/docs/higher-order-components.html) from the React team for more information on how higher order components work and can be composed together.
 
+#### withWebChat options object
+
+The `withWebChat` method takes an optional object as an argument. Most uses will never use these.
+
+| Attribute | Required | Default                                                  | Type    | Description                                                                                                                                                        |
+|-----------|----------|----------------------------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| debug     | No       | false                                                    | boolean | If set to true, adds logging for setup and tear down process of web chat. Helpful for seeing if your application is aggressively mounting and remounting web chat. |
+| baseUrl   | No       | https://web-chat.global.assistant.watson.appdomain.cloud | string  | Where externally loaded script for web chat are hosted. Used for internal development purposes.                                                                    |
+
 ### createWebChatInstance
 
 The `createWebChatInstance` method takes a [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject) as an argument and returns a promise. A promise will successfully resolve with the `instance` of web chat, or catch with a descriptive error.
