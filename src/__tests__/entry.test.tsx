@@ -15,8 +15,8 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 
-import { AddedWithWebChatProps, WebChatInstance } from '../types';
-import { withWebChat } from '../entry';
+import { withWebChat, AddedWithWebChatProps, WebChatInstance } from '../entry';
+import { WebChatConfig } from '../types';
 
 jest.setTimeout(20000);
 
@@ -34,8 +34,9 @@ describe('entry.tsx', () => {
           region: 'us-south',
           serviceInstanceID: '981593e2-2d49-41f2-81d1-1bbdfb4f7898',
           openChatByDefault: true,
-        }).then((instance) => {
-          instance.render();
+          onLoad: (instance: WebChatInstance) => {
+            instance.render();
+          },
         });
       }, []);
       return <div>I am here in {location}!</div>;
@@ -54,17 +55,24 @@ describe('entry.tsx', () => {
 
   it('should load web chat via createWebChatInstance prop and pass through original props with a class component', async () => {
     class ComponentToWrap extends React.Component<ComponentToWrapProps> {
+      // eslint-disable-next-line react/sort-comp
       componentDidMount() {
         const { createWebChatInstance } = this.props;
-        createWebChatInstance({
-          integrationID: 'f38e21ee-d79c-4427-859c-4fdd9bbed8f1',
-          region: 'us-south',
-          serviceInstanceID: '981593e2-2d49-41f2-81d1-1bbdfb4f7898',
-          openChatByDefault: true,
-        }).then((instance: WebChatInstance) => {
-          instance.render();
-        });
+        createWebChatInstance(this.webChatOptions);
       }
+
+      webChatOnLoad = (instance: WebChatInstance) => {
+        instance.render();
+      };
+
+      // eslint-disable-next-line react/sort-comp
+      webChatOptions: WebChatConfig = {
+        integrationID: 'f38e21ee-d79c-4427-859c-4fdd9bbed8f1',
+        region: 'us-south',
+        serviceInstanceID: '981593e2-2d49-41f2-81d1-1bbdfb4f7898',
+        openChatByDefault: true,
+        onLoad: this.webChatOnLoad,
+      };
 
       render() {
         const { location } = this.props;
