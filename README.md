@@ -8,8 +8,8 @@
   <summary>Table of contents</summary>
 
 - [Installation](#installation)
+- [How this works](#how-this-works)
 - [Usage](#usage)
-  - [About higher order components](#about-higher-order-components)
   - [With a functional component](#with-a-functional-component)
   - [With a class component](#with-a-class-component)
   - [Render user_defined responses](#render-user_defined-responses)
@@ -38,11 +38,12 @@ Or using `yarn`:
 ```bash
 yarn add @watson-conversation/watson-assistant-web-chat-react
 ```
+
+## How this works
+
+This package allows you to inject a property called `createWebChatInstance` as a prop to a given React component.  The `createWebChatInstance` method takes a [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject) as an argument and returns an [instance](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-instance-methods) of the web chat that you can now access inside your React application. Making the `instance` available for use inside your React component makes it easy for your React application and web chat to work in harmony, including allowing you to render React content inside web chat via [React portals](https://reactjs.org/docs/portals.html).
+
 ## Usage
-
-### About higher order components
-
-Higher-order components (HOC) are a pattern in React for allowing a function to take a component as an argument, and returning a new component that wraps the passed component and passes it new props. The HOC in this package passes a prop named `createWebChatInstance`. The `createWebChatInstance` method takes a [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject) as an argument and returns an [instance](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-instance-methods) of the web chat that you can now access inside your React application. Your created instance is automatically destroyed if your React component unmounts.
 
 ### With a functional component
 
@@ -54,6 +55,11 @@ import { withWebChat } from '@watson-conversation/watson-assistant-web-chat-reac
 
 const MyLocation = ({ location, createWebChatInstance }) => {
 
+  useEffect(() => {
+    function onWebChatLoad(instance) {
+      instance.render();
+    }
+
     // A web chat configuration options object as documented at https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject
     const webChatOptions = {
       integrationID: 'XXXX',
@@ -62,16 +68,11 @@ const MyLocation = ({ location, createWebChatInstance }) => {
       onLoad: onWebChatLoad
     };
 
-    useEffect(() => {
-      createWebChatInstance(webChatOptions);
-    }, []);
+    createWebChatInstance(webChatOptions);
+  }, []);
 
-    function onWebChatLoad(instance) {
-      instance.render();
-    }
-
-    return <div>I am here in {location}!</div>;
-  };
+  return <div>I am here in {location}!</div>;
+};
 
 // Wrap the component with the method returned by `withWebChat`.
 export default withWebChat()(MyLocation);
@@ -113,7 +114,7 @@ class MyLocation extends Component {
 
   componentDidMount() {
     const { createWebChatInstance } = this.props;
-    createWebChatInstance(webChatOptions).then(instance => { this.onWebChatLoad(instance); });
+    createWebChatInstance(this.webChatOptions).then(instance => { this.onWebChatLoad(instance); });
   }
 
   onWebChatLoad = (instance) => {
@@ -180,6 +181,11 @@ const withWebChatConfig: WithWebChatConfig = {
 };
 
 const MyLocation = ({ location, createWebChatInstance }: MyLocationProps) => {
+  useEffect(() => {
+
+    function onWebChatLoad(instance: WebChatInstance) {
+      instance.render();
+    }
 
     // A web chat configuration options object as documented at https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject
     const webChatOptions: WebChatConfig = {
@@ -189,16 +195,11 @@ const MyLocation = ({ location, createWebChatInstance }: MyLocationProps) => {
       onLoad: onWebChatLoad
     };
 
-    useEffect(() => {
-      createWebChatInstance(webChatOptions);
-    }, []);
+    createWebChatInstance(webChatOptions);
+  }, []);
 
-    function onWebChatLoad(instance: WebChatInstance) {
-      instance.render();
-    }
-
-    return <div>I am here in {location}!</div>;
-  };
+  return <div>I am here in {location}!</div>;
+};
 
 // Wrap the component with the method returned by `withWebChat`.
 export default withWebChat(withWebChatConfig)(MyLocation);
