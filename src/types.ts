@@ -93,6 +93,25 @@ interface AddedWithWebChatProps {
   createWebChatInstance: (config: WebChatConfig) => Promise<WebChatInstance>;
 }
 
+/**
+ * The ref that is added to WithWebChat by forwardRef.
+ */
+interface ForwardedRefProps {
+  forwardedRef: React.Ref<unknown>;
+}
+
+/**
+ * The props passed into the original component combined with the ref props we add later.
+ */
+type WithWebChatProps<T> = T & ForwardedRefProps;
+
+/**
+ * Props passed to the original component with any reference to any props added by the HOC removed.
+ * We need to specifically say to not have two props of the same name here for TypeScript to correctly
+ * infer types.
+ */
+type OriginalProps<T> = Omit<T, keyof AddedWithWebChatProps>;
+
 declare global {
   /**
    * Optionally, adding the instance of WAC to window for use by the tutorial demos.
@@ -105,4 +124,12 @@ declare global {
   }
 }
 
-export { WebChatConfig, WebChatInstance, AddedWithWebChatProps, WithWebChatConfig };
+export {
+  WebChatConfig,
+  WebChatInstance,
+  AddedWithWebChatProps,
+  WithWebChatConfig,
+  ForwardedRefProps,
+  WithWebChatProps,
+  OriginalProps,
+};

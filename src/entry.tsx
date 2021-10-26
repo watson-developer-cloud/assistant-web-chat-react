@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 /**
  * (C) Copyright IBM Corp. 2021.
  *
@@ -14,9 +13,18 @@
  */
 
 /* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-underscore-dangle */
 
 import React from 'react';
-import { WebChatConfig, WebChatInstance, AddedWithWebChatProps, WithWebChatConfig } from './types';
+import {
+  WebChatConfig,
+  WebChatInstance,
+  AddedWithWebChatProps,
+  WithWebChatConfig,
+  OriginalProps,
+  ForwardedRefProps,
+  WithWebChatProps,
+} from './types';
 
 const DEFAULT_BASE_URL = 'https://web-chat.global.assistant.watson.appdomain.cloud';
 
@@ -34,11 +42,12 @@ let loadWebChatScriptPromise: Promise<unknown>;
  * shouldn't have to touch that normally.
  */
 function withWebChat(passedConfig: WithWebChatConfig = {}) {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  return function withWebChatWithConfig<T>(WrappedComponent: React.ComponentType<T>) {
+  return function withWebChatWithConfig<T>(
+    WrappedComponent: React.ComponentType<T>,
+  ): React.ForwardRefExoticComponent<React.PropsWithoutRef<OriginalProps<T>> & React.RefAttributes<unknown>> {
     const displayName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
-    function WithWebChat(props: Omit<T, keyof AddedWithWebChatProps>) {
+    function WithWebChat(props: WithWebChatProps<OriginalProps<T>>) {
       const config = {
         baseUrl: passedConfig.baseUrl || DEFAULT_BASE_URL,
         debug: passedConfig.debug || false,
@@ -166,6 +175,7 @@ function withWebChat(passedConfig: WithWebChatConfig = {}) {
         }
 
         return () => {
+          // By setting isMounted to false, we prevent post async code from running when the component is no longer mounted.
           isMounted = false;
           if (webChatConfig) {
             if (instance) {
@@ -178,12 +188,17 @@ function withWebChat(passedConfig: WithWebChatConfig = {}) {
         };
       }, [webChatConfig, webChatLoadedPromise]);
 
-      return <WrappedComponent {...(props as T)} createWebChatInstance={createWebChatInstance} />;
+      const { forwardedRef, ...restPropsTemp } = props as ForwardedRefProps;
+      const rest = restPropsTemp as T;
+      return <WrappedComponent {...rest} ref={forwardedRef} createWebChatInstance={createWebChatInstance} />;
     }
 
-    WithWebChat.displayName = `WithWebChat(${displayName})`;
+    const WithForwardedRef = React.forwardRef((props: OriginalProps<T>, ref: React.Ref<unknown>) => (
+      <WithWebChat {...props} forwardedRef={ref} />
+    ));
+    WithForwardedRef.displayName = displayName;
 
-    return WithWebChat;
+    return WithForwardedRef;
   };
 }
 
