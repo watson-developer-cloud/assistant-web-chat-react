@@ -30,10 +30,10 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: 14
-      - name: Install
-        run: yarn install --immutable
-      - name: Build
-        run: yarn run build
+    - name: Install Dependencies
+      run: yarn install --immutable
+    - name: Build
+      run: yarn run build
     - name: Install Semantic Release dependencies
       run: |
         sudo apt-get install bumpversion
