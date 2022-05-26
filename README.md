@@ -66,6 +66,7 @@ const MyLocation = ({ location, createWebChatInstance }) => {
       integrationID: 'XXXX',
       region: 'XXXX',
       serviceInstanceID: 'XXXX',
+      // subscriptionID: 'only on enterprise plans',
       onLoad: onWebChatLoad
     };
 
@@ -110,6 +111,7 @@ class MyLocation extends Component {
     integrationID: 'XXXX',
     region: 'XXXX',
     serviceInstanceID: 'XXXX',
+    // subscriptionID: 'only on enterprise plans',
     onLoad: this.onWebChatLoad
   };
 
@@ -193,6 +195,7 @@ const MyLocation = ({ location, createWebChatInstance }: MyLocationProps) => {
       integrationID: 'XXXX',
       region: 'XXXX',
       serviceInstanceID: 'XXXX',
+      // subscriptionID: 'only on enterprise plans',
       onLoad: onWebChatLoad
     };
 
