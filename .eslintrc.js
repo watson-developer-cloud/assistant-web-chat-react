@@ -38,8 +38,13 @@ module.exports = {
   ],
   plugins: ['jsdoc', 'simple-import-sort'],
   rules: {
-    'no-use-before-define': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    camelcase: 'off',
     'import/extensions': 'off',
+    'import/prefer-default-export': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
+    'react/require-default-props': 'off',
+    'no-use-before-define': 'off',
   },
 };
