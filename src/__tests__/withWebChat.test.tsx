@@ -16,10 +16,11 @@
 
 import '@testing-library/jest-dom';
 import React from 'react';
-import { render, waitFor, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 
 import { withWebChat, AddedWithWebChatProps, WebChatInstance } from '../entry';
-import { WebChatConfig } from '../types';
+import { WebChatConfig } from '../types/WebChatConfig';
+import { TEST_INSTANCE_CONFIG, waitForText } from '../test/testUtils';
 
 jest.setTimeout(20000);
 
@@ -27,15 +28,13 @@ interface ComponentToWrapProps extends AddedWithWebChatProps {
   location: string;
 }
 
-describe('entry.tsx', () => {
+describe('withWebChat', () => {
   it('should load web chat via createWebChatInstance prop and pass through original props with a functional component', async () => {
     const ComponentToWrap = (props: ComponentToWrapProps) => {
       const { location, createWebChatInstance } = props;
       React.useEffect(() => {
         createWebChatInstance({
-          integrationID: 'f38e21ee-d79c-4427-859c-4fdd9bbed8f1',
-          region: 'us-south',
-          serviceInstanceID: '981593e2-2d49-41f2-81d1-1bbdfb4f7898',
+          ...TEST_INSTANCE_CONFIG,
           openChatByDefault: true,
           onLoad: (instance: WebChatInstance) => {
             instance.render();
@@ -45,15 +44,10 @@ describe('entry.tsx', () => {
       return <div>I am here in {location}!</div>;
     };
     const WasWrappedComponent = withWebChat({ debug: true })(ComponentToWrap);
-    const { getByText, getAllByText } = render(<WasWrappedComponent location="Boston" />);
+    const { getByText, findAllByText } = render(<WasWrappedComponent location="Boston" />);
     // Extra props are correctly passed.
     expect(getByText('Boston', { exact: false })).toBeInTheDocument();
-    await waitFor(
-      () => {
-        expect(getAllByText('Watson Assistant', { exact: false }).length).toBeTruthy();
-      },
-      { timeout: 10000 },
-    );
+    await waitForText('Watson Assistant', findAllByText);
   });
 
   it('should load web chat via createWebChatInstance prop and pass through original props with a class component', async () => {
@@ -70,9 +64,7 @@ describe('entry.tsx', () => {
 
       // eslint-disable-next-line react/sort-comp
       webChatOptions: WebChatConfig = {
-        integrationID: 'f38e21ee-d79c-4427-859c-4fdd9bbed8f1',
-        region: 'us-south',
-        serviceInstanceID: '981593e2-2d49-41f2-81d1-1bbdfb4f7898',
+        ...TEST_INSTANCE_CONFIG,
         openChatByDefault: true,
         onLoad: this.webChatOnLoad,
       };
@@ -84,15 +76,10 @@ describe('entry.tsx', () => {
     }
 
     const WasWrappedComponent = withWebChat({ debug: true })(ComponentToWrap);
-    const { getByText, getAllByText } = render(<WasWrappedComponent location="Boston" />);
+    const { getByText, findAllByText } = render(<WasWrappedComponent location="Boston" />);
     // Extra props are correctly passed.
     expect(getByText('Boston', { exact: false })).toBeInTheDocument();
-    await waitFor(
-      () => {
-        expect(getAllByText('Watson Assistant', { exact: false }).length).toBeTruthy();
-      },
-      { timeout: 10000 },
-    );
+    await waitForText('Watson Assistant', findAllByText);
   });
 
   it('should load web chat via createWebChatInstance prop and pass through original props and a ref', async () => {
@@ -100,9 +87,7 @@ describe('entry.tsx', () => {
       const { location, createWebChatInstance } = props;
       React.useEffect(() => {
         createWebChatInstance({
-          integrationID: 'f38e21ee-d79c-4427-859c-4fdd9bbed8f1',
-          region: 'us-south',
-          serviceInstanceID: '981593e2-2d49-41f2-81d1-1bbdfb4f7898',
+          ...TEST_INSTANCE_CONFIG,
           openChatByDefault: true,
           onLoad: (instance: WebChatInstance) => {
             instance.render();
@@ -117,13 +102,13 @@ describe('entry.tsx', () => {
     });
     const WasWrappedComponent = withWebChat({ debug: true })(ComponentToWrap);
     class App extends React.Component {
-      locationRef = React.createRef<HTMLInputElement>();
-
       onClickButton() {
         if (this && this.locationRef && this.locationRef.current) {
           this.locationRef.current.focus();
         }
       }
+
+      locationRef = React.createRef<HTMLInputElement>();
 
       render() {
         return (
@@ -136,15 +121,10 @@ describe('entry.tsx', () => {
         );
       }
     }
-    const { getByText, getAllByText, getByPlaceholderText, getByTestId } = render(<App />);
+    const { getByText, findAllByText, getByPlaceholderText, getByTestId } = render(<App />);
     // Extra props are correctly passed.
     expect(getByText('Boston', { exact: false })).toBeInTheDocument();
-    await waitFor(
-      () => {
-        expect(getAllByText('Watson Assistant', { exact: false }).length).toBeTruthy();
-      },
-      { timeout: 10000 },
-    );
+    await waitForText('Watson Assistant', findAllByText);
     const button = getByTestId('focus-button');
     fireEvent.click(button);
     expect(getByPlaceholderText('Where are you from?')).toHaveFocus();

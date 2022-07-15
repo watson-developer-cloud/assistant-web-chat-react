@@ -47,5 +47,9 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# generate output
+# Generated output
 dist
+
+# IntelliJ/WebStorm Files
+.idea
+*.iml
