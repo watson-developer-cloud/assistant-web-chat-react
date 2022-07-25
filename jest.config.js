@@ -7,5 +7,7 @@ module.exports = {
     resources: 'usable',
     runScripts: 'dangerously',
   },
+  setupFiles: ['<rootDir>/src/test/globalTestSetup.ts'],
+  testPathIgnorePatterns: ['.*/__tests__/.*\\.util\\.ts'],
   setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
 };
