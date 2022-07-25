@@ -268,6 +268,7 @@ createWebChatInstance(config).then(instance => {}).catch(error => {});
 - [Watson Assistant web chat feature documentation](https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-deploy-web-chat)
 - [Watson Assistant web chat API documentation](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-overview)
 - [Higher order components](https://reactjs.org/docs/higher-order-components.html)
+
 ## License
 
 This package is available under the [MIT License](./LICENSE).
