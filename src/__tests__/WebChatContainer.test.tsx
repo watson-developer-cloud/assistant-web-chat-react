@@ -12,7 +12,7 @@
  *
  */
 
-import React from 'react';
+import React, { MutableRefObject } from 'react';
 import { render } from '@testing-library/react';
 import { WebChatContainer, WebChatContainerProps } from '../WebChatContainer';
 import { TEST_INSTANCE_CONFIG, waitForText, waitForWebChat } from '../test/testUtils';
@@ -28,6 +28,7 @@ describe('WebChatContainer', () => {
   });
 
   it('tests that the component renders custom responses', async () => {
+    const instanceRef: MutableRefObject<WebChatInstance> = { current: null };
     let webChatInstance: WebChatInstance;
 
     // We'll use this map to assign a unique number to each event so we can generate a unique custom response for
@@ -52,6 +53,7 @@ describe('WebChatContainer', () => {
         config={TEST_INSTANCE_CONFIG}
         onBeforeRender={onBeforeRender}
         renderCustomResponse={renderCustomResponse}
+        instanceRef={instanceRef}
       />
     );
     const { findAllByText, queryAllByText, findAllByPlaceholderText } = render(component);
@@ -70,5 +72,7 @@ describe('WebChatContainer', () => {
     await waitForText('This is a custom response! Count: 2.', findAllByText);
     await waitForText('This is a custom response! Count: 1.', findAllByText);
     expect(queryAllByText('This is a custom response! Count: 3.', { exact: false }).length).toEqual(0);
+
+    expect(instanceRef.current).toBe(webChatInstance);
   });
 });

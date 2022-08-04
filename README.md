@@ -270,9 +270,11 @@ The `WebChatContainer` function is a functional component that makes use of `wit
 
 `WebChatContainer` has the following props.
 
-| Attribute | Required | Type    | Description                                                                                                                                                        |
-|-----------|----------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Attribute | Required | Type    | Description |
+|-----------|----------|---------|-------------|
 | config    | Yes      | object  | The [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject). Note that any `onLoad` property will be ignored. |
+|
+| instanceRef    | No      | MutableRefObject  | A convenience prop that is a reference to the web chat instance. This component will set the value of this ref using the `current` property when the instance has been created. |
 |
 | onBeforeRender    | No      | function  | This is a callback function that is called after web chat has been loaded and before the `render` function is called. This function is passed a single argument which is the instance of web chat that was loaded. This function can be used to obtain a reference to the web chat instance if you want to make use of the instance functions that are available. |
 |

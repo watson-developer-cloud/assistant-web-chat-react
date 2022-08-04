@@ -12,7 +12,7 @@
  *
  */
 
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState, MutableRefObject } from 'react';
 import { CustomResponsePortalsContainer } from './CustomResponsePortalsContainer';
 import { withWebChat } from './withWebChat';
 import { AddedWithWebChatProps } from './types/types';
@@ -36,6 +36,12 @@ interface WebChatContainerProps {
    * This is the function that this component will call when a custom response should be rendered.
    */
   renderCustomResponse?: (event: CustomResponseEvent, instance: WebChatInstance) => ReactNode;
+
+  /**
+   * A convenience prop that is a reference to the web chat instance. This component will set the value of this ref
+   * when the instance has been created.
+   */
+  instanceRef?: MutableRefObject<WebChatInstance>;
 }
 
 /**
@@ -48,12 +54,13 @@ interface WebChatContainerProps {
  * chat instance or need to perform additional customizations of web chat when it loads, use the onBeforeRender
  * callback prop to this component.
  */
-function WebChatContainer({ onBeforeRender, renderCustomResponse, config }: WebChatContainerProps) {
+function WebChatContainer({ onBeforeRender, renderCustomResponse, config, instanceRef }: WebChatContainerProps) {
   return (
     <WebChatContainerWithWebChat
       onBeforeRender={onBeforeRender}
       renderCustomResponse={renderCustomResponse}
       config={config}
+      instanceRef={instanceRef}
     />
   );
 }
@@ -68,6 +75,7 @@ const WebChatContainerInternal = ({
   onBeforeRender,
   renderCustomResponse,
   config,
+  instanceRef,
 }: WebChatContainerInternalProps) => {
   const [webChatInstance, setWebChatInstance] = useState<WebChatInstance>();
 
@@ -88,6 +96,13 @@ const WebChatContainerInternal = ({
 
     createWebChatInstance(webChatOptions);
   }, []);
+
+  useEffect(() => {
+    if (instanceRef) {
+      // eslint-disable-next-line no-param-reassign
+      instanceRef.current = webChatInstance;
+    }
+  }, [instanceRef, webChatInstance]);
 
   if (renderCustomResponse && webChatInstance) {
     return <CustomResponsePortalsContainer webChatInstance={webChatInstance} renderResponse={renderCustomResponse} />;
