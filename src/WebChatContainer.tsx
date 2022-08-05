@@ -15,9 +15,10 @@
 import React, { ReactNode, useEffect, useState, MutableRefObject } from 'react';
 import { CustomResponsePortalsContainer } from './CustomResponsePortalsContainer';
 import { withWebChat } from './withWebChat';
-import { AddedWithWebChatProps } from './types/types';
+import { AddedWithWebChatProps } from './types/WithWebChatTypes';
 import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
+import { CustomResponseEvent } from './types/CustomResponseEvent';
 
 interface WebChatContainerProps {
   /**

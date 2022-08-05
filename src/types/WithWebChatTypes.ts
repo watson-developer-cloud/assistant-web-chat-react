@@ -64,14 +64,4 @@ type WithWebChatProps<T> = T & ForwardedRefProps;
  */
 type OriginalProps<T> = Omit<T, keyof AddedWithWebChatProps>;
 
-declare global {
-  interface Window {
-    /**
-     * This is the initialization function that the web chat script adds to the window object that can be used to
-     * load web chat.
-     */
-    loadWatsonAssistantChat?: (config: WebChatConfig) => Promise<WebChatInstance>;
-  }
-}
-
 export { AddedWithWebChatProps, WithWebChatConfig, ForwardedRefProps, WithWebChatProps, OriginalProps };

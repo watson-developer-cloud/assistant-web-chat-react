@@ -14,6 +14,7 @@
 
 import React, { ReactNode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { CustomResponseEvent } from './types/CustomResponseEvent';
 import { WebChatInstance } from './types/WebChatInstance';
 
 interface CustomResponsePortalsContainer {

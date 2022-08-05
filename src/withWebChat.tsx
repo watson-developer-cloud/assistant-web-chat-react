@@ -16,7 +16,7 @@
 /* eslint-disable no-underscore-dangle */
 
 import React from 'react';
-import { WithWebChatConfig, OriginalProps, ForwardedRefProps, WithWebChatProps } from './types/types';
+import { WithWebChatConfig, OriginalProps, ForwardedRefProps, WithWebChatProps } from './types/WithWebChatTypes';
 import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
 

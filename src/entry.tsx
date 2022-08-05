@@ -13,10 +13,10 @@
  */
 
 import { withWebChat } from './withWebChat';
-import { AddedWithWebChatProps, WithWebChatConfig } from './types/types';
+import { AddedWithWebChatProps, WithWebChatConfig } from './types/WithWebChatTypes';
 import { CustomResponsePortalsContainer } from './CustomResponsePortalsContainer';
 import { WebChatContainer } from './WebChatContainer';
-import { CarbonTheme, LauncherType, WebChatConfig } from './types/WebChatConfig';
+import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
 
 export {
@@ -27,6 +27,4 @@ export {
   WebChatInstance,
   withWebChat,
   WithWebChatConfig,
-  CarbonTheme,
-  LauncherType,
 };
