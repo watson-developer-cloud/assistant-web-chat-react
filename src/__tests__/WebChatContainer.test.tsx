@@ -17,6 +17,7 @@ import { render } from '@testing-library/react';
 import { WebChatContainer, WebChatContainerProps } from '../WebChatContainer';
 import { TEST_INSTANCE_CONFIG, waitForText, waitForWebChat } from '../test/testUtils';
 import { WebChatInstance } from '../types/WebChatInstance';
+import { CustomResponseEvent } from '../types/CustomResponseEvent';
 
 jest.setTimeout(20000);
 
