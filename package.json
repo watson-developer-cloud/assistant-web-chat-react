@@ -1,6 +1,6 @@
 {
   "name": "@ibm-watson/assistant-web-chat-react",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A provider to inject web chat into your React application.",
   "license": "MIT",
   "repository": "watson-developer-cloud/assistant-web-chat-react",
