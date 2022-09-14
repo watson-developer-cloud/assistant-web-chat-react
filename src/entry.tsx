@@ -15,7 +15,7 @@
 import { withWebChat } from './withWebChat';
 import { AddedWithWebChatProps, WithWebChatConfig } from './types/WithWebChatTypes';
 import { CustomResponsePortalsContainer } from './CustomResponsePortalsContainer';
-import { WebChatContainer } from './WebChatContainer';
+import { WebChatContainer, setEnableDebug } from './WebChatContainer';
 import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
 
@@ -27,4 +27,5 @@ export {
   WebChatInstance,
   withWebChat,
   WithWebChatConfig,
+  setEnableDebug,
 };

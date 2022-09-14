@@ -46,5 +46,11 @@ module.exports = {
     'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
     'react/require-default-props': 'off',
     'no-use-before-define': 'off',
+    // Airbnb allows arrow functions but not regular functions which doesn't make any sense.
+    'react/jsx-no-bind': 'off',
+    // This rule is annoying and sometimes just wrong.
+    'no-shadow': 'off',
+    // The properties of object parameters should be allowed to be modified.
+    'no-param-reassign': ['error', { props: false }],
   },
 };

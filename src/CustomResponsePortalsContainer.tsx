@@ -45,7 +45,7 @@ interface CustomResponsePortalsContainer {
  * responses that had been received prior to that point.
  */
 function CustomResponsePortalsContainer({ webChatInstance, renderResponse }: CustomResponsePortalsContainer) {
-  // This state will be used to record all of the custom response events that are fired from the widget. These
+  // This state will be used to record all the custom response events that are fired from the widget. These
   // events contain the HTML elements that we will attach our portals to as well as the messages that we wish to
   // render in the message.
   const [customResponseEvents, setCustomResponseEvents] = useState<CustomResponseEvent[]>([]);
@@ -54,7 +54,7 @@ function CustomResponsePortalsContainer({ webChatInstance, renderResponse }: Cus
   // response events.
   useEffect(() => {
     // This handler will fire each time a custom response occurs and we will update our state by appending the event
-    // to the end of our events list. We have to make sure to create a new array in order to trigger a re-render.
+    // to the end of our events list. We have to make sure to create a new array in order to trigger a rerender.
     function customResponseHandler(event: CustomResponseEvent) {
       setCustomResponseEvents((eventsArray) => eventsArray.concat(event));
     }

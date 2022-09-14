@@ -15,10 +15,11 @@
     "noImplicitAny": true,
     "strictNullChecks": false,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    // These are useful for a final build but very annoying during development and debugging.
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": ["src", "src/types"],
   "exclude": ["node_modules", "dist", "example", "rollup.config.js", "__tests__"]
