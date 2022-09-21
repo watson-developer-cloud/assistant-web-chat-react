@@ -1,5 +1,7 @@
 # Using withWebChat
 
+**NOTE: This function is deprecated and will be removed in a future release of this library. Use the WebChatContainer component instead.**
+
 The `WebChatContainer` component, makes use of the `withWebChat` function to create high-order-components that inject a function for creating instances of web chat. This document explains how to use that function if you wish to bypass the `WebChatContainer`.
 
 <details>

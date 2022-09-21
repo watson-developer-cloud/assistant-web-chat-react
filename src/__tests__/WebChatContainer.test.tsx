@@ -15,7 +15,7 @@
 import React, { MutableRefObject } from 'react';
 import { render } from '@testing-library/react';
 import { WebChatContainer, WebChatContainerProps } from '../WebChatContainer';
-import { TEST_INSTANCE_CONFIG, waitForText, waitForWebChat } from '../test/testUtils';
+import { TEST_INSTANCE_CONFIG, waitForFind, waitForWebChat } from '../test/testUtils';
 import { WebChatInstance } from '../types/WebChatInstance';
 import { CustomResponseEvent } from '../types/CustomResponseEvent';
 
@@ -28,9 +28,39 @@ describe('WebChatContainer', () => {
     await waitForWebChat(findAllByPlaceholderText);
   });
 
+  it('tests that the component loads a different web chat when the config changes', async () => {
+    const { findAllByPlaceholderText, rerender, findAllByLabelText } = render(
+      <WebChatContainer config={TEST_INSTANCE_CONFIG} />,
+    );
+    await waitForWebChat(findAllByPlaceholderText);
+
+    rerender(
+      <WebChatContainer
+        config={{
+          ...TEST_INSTANCE_CONFIG,
+          showCloseAndRestartButton: true,
+        }}
+      />,
+    );
+
+    await waitForWebChat(findAllByPlaceholderText);
+    // This second configuration should display the close and restart button.
+    await waitForFind('End conversation and close the chat window', findAllByLabelText);
+  });
+
+  it('tests that the component renders correctly when mounted, unmounted and re-mounted', async () => {
+    // This is basically what the React 18 strict mode does in development mode.
+    const { findAllByPlaceholderText, rerender } = render(<WebChatContainer config={TEST_INSTANCE_CONFIG} />);
+    rerender(<div />);
+    rerender(<WebChatContainer config={TEST_INSTANCE_CONFIG} />);
+
+    await waitForWebChat(findAllByPlaceholderText);
+  });
+
   it('tests that the component renders custom responses', async () => {
     const instanceRef: MutableRefObject<WebChatInstance> = { current: null };
     let webChatInstance: WebChatInstance;
+    let webChatAfterInstance: WebChatInstance;
 
     // We'll use this map to assign a unique number to each event so we can generate a unique custom response for
     // each message and make sure they are rendered correctly.
@@ -38,6 +68,10 @@ describe('WebChatContainer', () => {
 
     const onBeforeRender: WebChatContainerProps['onBeforeRender'] = async (instance) => {
       webChatInstance = instance;
+    };
+
+    const onAfterRender: WebChatContainerProps['onAfterRender'] = async (instance) => {
+      webChatAfterInstance = instance;
     };
 
     const renderCustomResponse: WebChatContainerProps['renderCustomResponse'] = (event) => {
@@ -53,6 +87,7 @@ describe('WebChatContainer', () => {
       <WebChatContainer
         config={TEST_INSTANCE_CONFIG}
         onBeforeRender={onBeforeRender}
+        onAfterRender={onAfterRender}
         renderCustomResponse={renderCustomResponse}
         instanceRef={instanceRef}
       />
@@ -64,16 +99,17 @@ describe('WebChatContainer', () => {
     // Send a message to get the first custom response.
     webChatInstance.send({ input: { text: 'custom response' } });
 
-    await waitForText('This is a custom response! Count: 1.', findAllByText);
+    await waitForFind('This is a custom response! Count: 1.', findAllByText);
     expect(queryAllByText('This is a custom response! Count: 2.', { exact: false }).length).toEqual(0);
 
     // Send a message to get the second custom response and make sure both custom responses appear.
     webChatInstance.send({ input: { text: 'custom response' } });
 
-    await waitForText('This is a custom response! Count: 2.', findAllByText);
-    await waitForText('This is a custom response! Count: 1.', findAllByText);
+    await waitForFind('This is a custom response! Count: 2.', findAllByText);
+    await waitForFind('This is a custom response! Count: 1.', findAllByText);
     expect(queryAllByText('This is a custom response! Count: 3.', { exact: false }).length).toEqual(0);
 
     expect(instanceRef.current).toBe(webChatInstance);
+    expect(instanceRef.current).toBe(webChatAfterInstance);
   });
 });

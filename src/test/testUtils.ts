@@ -24,18 +24,23 @@ const TEST_INSTANCE_CONFIG = {
 };
 deepFreeze(TEST_INSTANCE_CONFIG);
 
+type FindFunctions =
+  | ReturnType<typeof render>['findAllByText']
+  | ReturnType<typeof render>['findAllByLabelText']
+  | ReturnType<typeof render>['findAllByPlaceholderText'];
+
 /**
- * Waits for an element with the given text to appear in the document.
+ * Waits for an element with the given text to appear in the document using the given find function.
  */
-async function waitForText(text: string, findAllByText: ReturnType<typeof render>['findAllByText']) {
-  await findAllByText(text, { exact: false }, { timeout: 20000 });
+async function waitForFind(text: string, find: FindFunctions) {
+  await find(text, { exact: false }, { timeout: 15000 });
 }
 
 /**
  * Waits for web chat to load and the text input field to appear.
  */
 async function waitForWebChat(findAllByPlaceholderText: ReturnType<typeof render>['findAllByPlaceholderText']) {
-  await findAllByPlaceholderText('Type something...', { exact: false }, { timeout: 20000 });
+  await waitForFind('Type something...', findAllByPlaceholderText);
 }
 
-export { TEST_INSTANCE_CONFIG, waitForText, waitForWebChat };
+export { TEST_INSTANCE_CONFIG, waitForFind, waitForWebChat };
