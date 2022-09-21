@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.0.2...v1.0.3) (2022-09-21)
+
+
+### Bug Fixes
+
+* made some fixes to how WebChatContainer handles mounting and changes to the web chat config ([#15](https://github.com/watson-developer-cloud/assistant-web-chat-react/issues/15)) ([d5380dd](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/d5380ddabef9461aefc8165d24951cdac139d4fb))
+
 ## [1.0.2](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.0.1...v1.0.2) (2022-08-08)
 
 
