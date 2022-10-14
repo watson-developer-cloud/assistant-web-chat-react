@@ -35,6 +35,8 @@ yarn add @ibm-watson/assistant-web-chat-react
 
 ## Using WebChatContainer
 
+### Basic example
+
 The `WebChatContainer` function component is intended to make it as easy as possible to include web chat in your React application. To use, you simply need to render this component anywhere in your application and provide the [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject) as a prop.
 
 ```javascript
@@ -50,7 +52,8 @@ const webChatOptions = {
   // Use the onBeforeRender or onAfterRender prop instead.
 };
 
-// Include this if you want to get debugging information.
+// Include this if you want to get debugging information from this library. Note this is different than
+// the web chat "debug: true" configuration option which enables debugging within web chat.
 setEnableDebug(true);
 
 function App() {
@@ -58,20 +61,53 @@ function App() {
 }
 ```
 
+### Accessing instance methods
+
+You can use the `onBeforeRender` or `onAfterRender` props to get access to the instance of web chat if you need call instance methods later. This example renders a button that toggles web chat open and is only rendered after the instance has become available.
+
+```javascript
+import React, { useCallback, useState } from 'react';
+import { WebChatContainer } from '@ibm-watson/assistant-web-chat-react';
+
+const webChatOptions = { /* Web chat options */ };
+
+function App() {
+  const [instance, setInstance] = useState(null);
+
+  const toggleWebChat = useCallback(() => {
+    instance.toggleOpen();
+  }, [instance]);
+
+  return (
+    <>
+      {instance && (
+        <button type="button" onClick={toggleWebChat}>
+          Toggle web chat
+        </button>
+      )}
+      <WebChatContainer config={webChatOptions} onBeforeRender={(instance) => onBeforeRender(instance, setInstance)} />
+    </>
+  );
+}
+
+function onBeforeRender(instance, setInstance) {
+  // Make the instance available to the React components.
+  setInstance(instance);
+
+  // Do any other work you might want to do before rendering. If you don't need any other work here, you can just use
+  // onBeforeRender={setInstance} in the component above.
+}
+```
+
+### Custom responses
+
 This component is also capable of managing custom responses. To do so, you need to pass a `renderCustomResponse` function as a prop. This function should return a React component that will render the content for the specific message for that response. You should make sure that the `WebChatContainer` component does not get unmounted in the middle of the life of your application because it will lose all custom responses that were previously received by web chat.
 
 ```javascript
 import React from 'react';
 import { WebChatContainer } from '@ibm-watson/assistant-web-chat-react';
 
-const webChatOptions = {
-  integrationID: 'XXXX',
-  region: 'XXXX',
-  serviceInstanceID: 'XXXX',
-  // subscriptionID: 'only on enterprise plans',
-  // Note that there is no onLoad property here. The WebChatContainer component will override it.
-  // Use the onBeforeRender or onAfterRender prop instead.
-};
+const webChatOptions = { /* Web chat options */ };
 
 function App() {
   return <WebChatContainer renderCustomResponse={renderCustomResponse} config={webChatOptions} />;
@@ -103,15 +139,10 @@ Note that this component will call the [web chat render](https://web-chat.global
 | Attribute | Required | Type    | Description |
 |-----------|----------|---------|-------------|
 | config    | Yes      | object  | The [web chat configuration options object](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-configuration#configurationobject). Note that any `onLoad` property will be ignored. If this prop is changed and a new object provided, then the current web chat will  be destroyed and a new one created with the new object. |
-|
 | instanceRef    | No      | MutableRefObject  | A convenience prop that is a reference to the web chat instance. This component will set the value of this ref using the `current` property when the instance has been created. |
-|
 | onBeforeRender    | No      | function  | This is a callback function that is called after web chat has been loaded and before the `render` function is called. This function is passed a single argument which is the instance of web chat that was loaded. This function can be used to obtain a reference to the web chat instance if you want to make use of the instance methods that are available. |
-|
 | onAfterRender    | No      | function  | This is a callback function that is called after web chat has been loaded and after the `render` function is called. This function is passed a single argument which is the instance of web chat that was loaded. This function can be used to obtain a reference to the web chat instance if you want to make use of the instance methods that are available. |
-|
 | renderCustomResponse    | No      | function  | This function is a callback function that will be called by this container to render custom responses. If this prop is provided, then the container will listen for custom response events from web chat and will generate a React portal for each event. This function will be called once during component render for each custom response event. This function takes two arguments. The first is the [custom response event](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-events#customresponse) that triggered the custom response. The second is a convenience argument that is the instance of web chat. The function should return a `ReactNode` that renders the custom content for the response. |
-|
 
 ### Debugging
 
