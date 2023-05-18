@@ -24,13 +24,6 @@ const DEFAULT_BASE_URL = 'https://web-chat.global.assistant.watson.appdomain.clo
 // Indicate if debugging is enabled.
 let debug = false;
 
-// The first time the container is mounted, we need to load the javascript for web chat from the CDN. This should
-// only happen once. This Promise is used to ensure that and to allow anyone to wait for that script to be loaded.
-let loadWebChatScriptPromise: Promise<unknown>;
-
-// The URL that was used to load the web chat javascript. This is to ensure we don't attempt to load different scripts.
-let loadedWebChatURL: string;
-
 interface ManagedWebChat {
   /**
    * The config for the web chat that is loaded.
@@ -256,34 +249,28 @@ async function ensureWebChatScript(webChatConfig: WebChatConfig, hostURL: string
     webChatConfig.clientVersion || 'latest'
   }/WatsonAssistantChatEntry.js`;
 
+  const loadedWebChatURL = (window as any).wacWebChatContainerScriptURL;
   if (loadedWebChatURL && loadedWebChatURL !== scriptURL) {
-    const message =
-      'Web chat has already been loaded using a different URL. This component does not support loading web chat' +
-      ' using multiple URLs including different versions of web chat.';
+    const message = `Web chat has already been loaded using a different URL (${loadedWebChatURL}). This component does not support loading web chat using multiple URLs including different versions of web chat. The current code attempted to load from ${scriptURL}.`;
     logger(null, message);
   }
-  loadedWebChatURL = scriptURL;
 
-  if (!loadWebChatScriptPromise) {
-    loadWebChatScriptPromise = loadWebChatScript(scriptURL);
+  // Check to see if we already have a Promise for loading this script. We're using a window property to cover the
+  // case where multiple library instances are being used that can't necessarily share module state.
+  if (!(window as any).wacWebChatContainerScriptPromise) {
+    logger(null, `Loading the web chat javascript from ${scriptURL}.`);
+
+    (window as any).wacWebChatContainerScriptPromise = new Promise<void>((resolve, reject) => {
+      const scriptElement = document.createElement('script');
+      scriptElement.onload = () => resolve();
+      scriptElement.onerror = () => reject();
+      scriptElement.src = scriptURL;
+      document.head.appendChild(scriptElement);
+      (window as any).wacWebChatContainerScriptURL = scriptURL;
+    });
   }
-  await loadWebChatScriptPromise;
+
+  return (window as any).wacWebChatContainerScriptPromise;
 }
 
-/**
- * Loads the web chat javascript from the CDN.
- */
-function loadWebChatScript(url: string): Promise<void> {
-  logger(null, `Loading the web chat javascript from ${url}.`);
-
-  return new Promise((resolve, reject) => {
-    const scriptElement = document.createElement('script');
-    scriptElement.setAttribute('id', 'with-web-chat');
-    scriptElement.onload = () => resolve();
-    scriptElement.onerror = () => reject();
-    scriptElement.src = url;
-    document.head.appendChild(scriptElement);
-  });
-}
-
-export { setEnableDebug, WebChatContainer, WebChatContainerProps };
+export { setEnableDebug, WebChatContainer, WebChatContainerProps, ensureWebChatScript };
