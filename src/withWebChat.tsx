@@ -16,6 +16,7 @@
 /* eslint-disable no-underscore-dangle */
 
 import React from 'react';
+import { loadWebChatScript as loadWebChatScriptNew } from './WebChatContainer';
 import { WithWebChatConfig, OriginalProps, ForwardedRefProps, WithWebChatProps } from './types/WithWebChatTypes';
 import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
@@ -262,15 +263,7 @@ function loadWebChatScript(webChatConfig: WebChatConfig, baseUrl: string): Promi
     webChatConfig.clientVersion || 'latest'
   }/WatsonAssistantChatEntry.js`;
 
-  return new Promise((resolve, reject) => {
-    const scriptElement = document.createElement('script');
-    scriptElement.setAttribute('id', 'with-web-chat');
-    scriptElement.setAttribute('async', 'true');
-    scriptElement.onload = () => resolve();
-    scriptElement.onerror = () => reject();
-    scriptElement.src = src;
-    document.head.appendChild(scriptElement);
-  });
+  return loadWebChatScriptNew(src);
 }
 
 export { withWebChat };

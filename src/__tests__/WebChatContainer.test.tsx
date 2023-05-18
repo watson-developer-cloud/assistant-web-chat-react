@@ -45,7 +45,7 @@ describe('WebChatContainer', () => {
 
     await waitForWebChat(findAllByPlaceholderText);
     // This second configuration should display the close and restart button.
-    await waitForFind('End conversation and close the chat window', findAllByLabelText);
+    await waitForFind('End chat and close the window', findAllByLabelText);
   });
 
   it('tests that the component renders correctly when mounted, unmounted and re-mounted', async () => {

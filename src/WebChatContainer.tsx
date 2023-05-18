@@ -277,13 +277,52 @@ function loadWebChatScript(url: string): Promise<void> {
   logger(null, `Loading the web chat javascript from ${url}.`);
 
   return new Promise((resolve, reject) => {
-    const scriptElement = document.createElement('script');
-    scriptElement.setAttribute('id', 'with-web-chat');
-    scriptElement.onload = () => resolve();
-    scriptElement.onerror = () => reject();
-    scriptElement.src = url;
-    document.head.appendChild(scriptElement);
+    // Wrap in setTimeout to make sure any in progress loadWebChatScripts have a chance to write the script element.
+    setTimeout(() => {
+      const hasScriptElement = Boolean(document.querySelector('#with-web-chat'));
+
+      // If we already have a loading script element, just keep checking its status and return it.
+      if (hasScriptElement) {
+        const scriptElement = document.querySelector('#with-web-chat');
+        let status = scriptElement.getAttribute('data-status');
+        const checkScriptLoading = setInterval(() => {
+          status = scriptElement.getAttribute('data-status');
+          switch (status) {
+            case 'resolved':
+              clearInterval(checkScriptLoading);
+              resolve();
+              break;
+            case 'rejected':
+              clearInterval(checkScriptLoading);
+              reject();
+              break;
+            case 'loading':
+              break;
+            default:
+              clearInterval(checkScriptLoading);
+              logger(null, 'Invalid loading state on script element.');
+              reject();
+              break;
+          }
+        }, 200);
+      } else {
+        // If we are not already loading the script element, go ahead and add it.
+        const scriptElement = document.createElement('script');
+        scriptElement.setAttribute('id', 'with-web-chat');
+        scriptElement.setAttribute('data-status', 'loading');
+        scriptElement.onload = () => {
+          scriptElement.setAttribute('data-status', 'resolved');
+          resolve();
+        };
+        scriptElement.onerror = () => {
+          scriptElement.setAttribute('data-status', 'rejected');
+          reject();
+        };
+        scriptElement.src = url;
+        document.head.appendChild(scriptElement);
+      }
+    }, 0);
   });
 }
 
-export { setEnableDebug, WebChatContainer, WebChatContainerProps };
+export { setEnableDebug, WebChatContainer, WebChatContainerProps, loadWebChatScript };
