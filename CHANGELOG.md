@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.0.3...v1.0.4) (2023-05-23)
+
+
+### Bug Fixes
+
+* fixed how the web chat script is loaded to avoid duplicates ([#19](https://github.com/watson-developer-cloud/assistant-web-chat-react/issues/19)) ([4220724](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/4220724021f228dd1f799efdbfd8489abc9083d7))
+
 ## [1.0.3](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.0.2...v1.0.3) (2022-09-21)
 
 
