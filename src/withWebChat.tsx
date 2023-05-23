@@ -19,6 +19,7 @@ import React from 'react';
 import { WithWebChatConfig, OriginalProps, ForwardedRefProps, WithWebChatProps } from './types/WithWebChatTypes';
 import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
+import { ensureWebChatScript } from './WebChatContainer';
 
 const DEFAULT_BASE_URL = 'https://web-chat.global.assistant.watson.appdomain.cloud';
 
@@ -140,7 +141,7 @@ function withWebChat(passedConfig: WithWebChatConfig = {}) {
           // If the script tag for web chat has not been injected on the page, do so now.
           if (!loadWebChatScriptPromise) {
             logger('appending web chat scripts to body');
-            loadWebChatScriptPromise = loadWebChatScript(webChatConfig, config.baseUrl);
+            loadWebChatScriptPromise = ensureWebChatScript(webChatConfig, config.baseUrl);
           }
 
           loadWebChatScriptPromise
@@ -254,23 +255,6 @@ class Deferred<T> {
   isRejected() {
     return this.state === 'rejected';
   }
-}
-
-// Inject WatsonAssistantChatEntry.js on the page and return a promise that resolves successfully onload.
-function loadWebChatScript(webChatConfig: WebChatConfig, baseUrl: string): Promise<void> {
-  const src = `${baseUrl.replace(/\/$/, '')}/versions/${
-    webChatConfig.clientVersion || 'latest'
-  }/WatsonAssistantChatEntry.js`;
-
-  return new Promise((resolve, reject) => {
-    const scriptElement = document.createElement('script');
-    scriptElement.setAttribute('id', 'with-web-chat');
-    scriptElement.setAttribute('async', 'true');
-    scriptElement.onload = () => resolve();
-    scriptElement.onerror = () => reject();
-    scriptElement.src = src;
-    document.head.appendChild(scriptElement);
-  });
 }
 
 export { withWebChat };
