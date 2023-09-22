@@ -236,7 +236,7 @@ function logger(webChatConfig: WebChatConfig, ...args: unknown[]) {
   if (debug) {
     const namespaceLabel = webChatConfig?.namespace ? `: Namespace ${webChatConfig.namespace}` : '';
     // eslint-disable-next-line no-console
-    console.log(`[Watson Assistant WebChatContainer${namespaceLabel}]`, ...args);
+    console.log(`[IBM watsonx Assistant WebChatContainer${namespaceLabel}]`, ...args);
   }
 }
 
