@@ -80,7 +80,7 @@ function withWebChat(passedConfig: WithWebChatConfig = {}) {
           if (config.debug) {
             // eslint-disable-next-line no-console
             console.log(
-              `[Watson Assistant withWebChat${
+              `[IBM watsonx Assistant withWebChat${
                 webChatConfig && webChatConfig.namespace ? `: Namespace "${webChatConfig.namespace}"` : ''
               }]`,
               args,
@@ -102,7 +102,7 @@ function withWebChat(passedConfig: WithWebChatConfig = {}) {
               if (instance) {
                 // eslint-disable-next-line no-console
                 console.warn(
-                  '[Watson Assistant withWebChat] createWebChatInstance has already been called... destroying previous instance.',
+                  '[IBM watsonx Assistant withWebChat] createWebChatInstance has already been called... destroying previous instance.',
                 );
                 instance.destroy();
               }
@@ -159,7 +159,7 @@ function withWebChat(passedConfig: WithWebChatConfig = {}) {
               if (isMounted) {
                 logger('web chat script failed to load. createWebChatInstance will reject.');
                 webChatLoadedPromise.current.reject(
-                  `[Watson Assistant withWebChat${
+                  `[IBM watsonx Assistant withWebChat${
                     webChatConfig && webChatConfig.namespace ? `: Namespace "${webChatConfig.namespace}"` : ''
                   }] web chat failed to load.`,
                 );

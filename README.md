@@ -1,9 +1,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build and Test](https://github.com/watson-developer-cloud/assistant-web-chat-react/actions/workflows/build-test.yml/badge.svg)](https://github.com/watson-developer-cloud/assistant-web-chat-react/actions/workflows/build-test.yml)
 
-# Watson Assistant web chat with React
+# IBM watsonx Assistant web chat with React
 
-`@ibm-watson/assistant-web-chat-react` is a React library to extend the [web chat](https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-deploy-web-chat) feature of [IBM Watson Assistant](https://www.ibm.com/cloud/watson-assistant) within your React application. This makes it easier to provide user-defined response types written in React, add content to custom elements with React, have the web chat and your site communicate more easily, and more.
+`@ibm-watson/assistant-web-chat-react` is a React library to extend the [web chat](https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-deploy-web-chat) feature of [IBM watsonx Assistant](https://www.ibm.com/cloud/watson-assistant) within your React application. This makes it easier to provide user-defined response types written in React, add content to custom elements with React, have the web chat and your site communicate more easily, and more.
 
 The primary utility provided by this library is the `WebChatContainer` functional component. This component will load and render an instance of web chat when it is mounted and destroy that instance when unmounted.
 
@@ -161,9 +161,9 @@ function App() {
 The [withWebChat](WITH_WEB_CHAT.MD) function is an older function that is used for loading web chat. It is now deprecated in favor of using the `WebChatContainer` component instead.
 
 ## Additional resources
-- [Watson Assistant](https://www.ibm.com/cloud/watson-assistant)
-- [Watson Assistant web chat feature documentation](https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-deploy-web-chat)
-- [Watson Assistant web chat API documentation](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-overview)
+- [IBM watsonx Assistant](https://www.ibm.com/cloud/watson-assistant)
+- [IBM watsonx Assistant web chat feature documentation](https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-deploy-web-chat)
+- [IBM watsonx Assistant web chat API documentation](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-overview)
 
 ## License
 
