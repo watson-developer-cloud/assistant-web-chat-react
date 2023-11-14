@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /**
  * (C) Copyright IBM Corp. 2021.
  *
@@ -14,6 +15,13 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const nodeCrypto = require('crypto');
+
+// Hide all the internal output from test cases.
+console.error = () => {};
+console.warn = () => {};
+console.log = () => {};
+console.debug = () => {};
+console.info = () => {};
 
 // eslint-disable-next-line no-undef
 window.crypto = {

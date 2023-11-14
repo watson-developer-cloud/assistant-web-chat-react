@@ -45,6 +45,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
     'react/require-default-props': 'off',
+    'react/jsx-props-no-spreading': 'off',
     'no-use-before-define': 'off',
     // Airbnb allows arrow functions but not regular functions which doesn't make any sense.
     'react/jsx-no-bind': 'off',
