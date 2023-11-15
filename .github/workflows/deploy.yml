@@ -27,9 +27,9 @@ jobs:
       with:
         persist-credentials: false
     - name: Set up Node and Build for Deploy
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: 14
+        node-version: 16
     - name: Install Dependencies
       run: yarn install --immutable
     - name: Build
