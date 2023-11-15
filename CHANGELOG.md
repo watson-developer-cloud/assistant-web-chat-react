@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.0.4...v1.1.0) (2023-11-15)
+
+
+### Features
+
+* added the WebChatCustomElement component to aid in using web chat with a custom element ([#23](https://github.com/watson-developer-cloud/assistant-web-chat-react/issues/23)) ([b79a471](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/b79a47199c042524724ae7f943c7461019ffaca0))
+
 ## [1.0.4](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.0.3...v1.0.4) (2023-05-23)
 
 
