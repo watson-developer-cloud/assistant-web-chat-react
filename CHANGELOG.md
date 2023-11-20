@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.1.0...v1.1.1) (2023-11-20)
+
+
+### Bug Fixes
+
+* added the WebChatCustomElement component to entry point export list ([#25](https://github.com/watson-developer-cloud/assistant-web-chat-react/issues/25)) ([4bacd73](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/4bacd73058501d859fc242d560e89efea4d706dd))
+
 # [1.1.0](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.0.4...v1.1.0) (2023-11-15)
 
 
