@@ -18,6 +18,7 @@ import { CustomResponsePortalsContainer } from './CustomResponsePortalsContainer
 import { WebChatContainer, setEnableDebug } from './WebChatContainer';
 import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
+import { WebChatCustomElement } from './WebChatCustomElement';
 
 export {
   AddedWithWebChatProps,
@@ -28,4 +29,5 @@ export {
   withWebChat,
   WithWebChatConfig,
   setEnableDebug,
+  WebChatCustomElement,
 };
