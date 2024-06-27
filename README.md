@@ -100,9 +100,13 @@ function onBeforeRender(instance, setInstance) {
 }
 ```
 
-### Custom responses
+### User defined responses
 
-This component is also capable of managing custom responses. To do so, you need to pass a `renderCustomResponse` function as a prop. This function should return a React component that will render the content for the specific message for that response. You should make sure that the `WebChatContainer` component does not get unmounted in the middle of the life of your application because it will lose all custom responses that were previously received by web chat.
+This component is also capable of managing user defined responses. To do so, you need to pass a `renderUserDefinedResponse` function as a render prop. This function should return a React component that will render the content for the specific message for that response. You should make sure that the `WebChatContainer` component does not get unmounted in the middle of the life of your application because it will lose all user defined responses that were previously received by web chat.
+
+You should treat the `renderUserDefinedResponse` prop like any typical React render prop; it is different from the `userDefinedResponse` event or a typical event handler. The event is fired only once when web chat initially receives the response from the server. The `renderUserDefinedResponse` prop however is called every time the App re-renders and it should return an up-to-date React component for the provided message item just like the render function would for a typical React component.
+
+Note: in web chat 8.2.0, the custom response event was renamed from `customResponse` to `userDefinedResponse`. If this library detects you are using a prior version of web chat, it will use the `customResponse` event instead of `userDefinedResponse`. 
 
 ```javascript
 import React from 'react';
@@ -111,14 +115,14 @@ import { WebChatContainer } from '@ibm-watson/assistant-web-chat-react';
 const webChatOptions = { /* Web chat options */ };
 
 function App() {
-  return <WebChatContainer renderCustomResponse={renderCustomResponse} config={webChatOptions} />;
+  return <WebChatContainer renderUserDefinedResponse={renderUserDefinedResponse} config={webChatOptions} />;
 }
 
-function renderCustomResponse(event) {
-  // The event here will contain details for each custom response that needs to be rendered.
+function renderUserDefinedResponse(event) {
+  // The event here will contain details for each user defined response that needs to be rendered.
   // The "user_defined_type" property is just an example; it is not required. You can use any other property or
   // condition you want here. This makes it easier to handle different response types if you have more than
-  // one custom response type.
+  // one user defined response type.
   if (event.data.message.user_defined && event.data.message.user_defined.user_defined_type === 'my-custom-type') {
     return <div>My custom content</div>
   }
@@ -164,7 +168,7 @@ function App() {
 
 ### WebChatContainer API
 
-The `WebChatContainer` function is a functional component that will load and render an instance of web chat when it is mounted and destroy that instance when unmounted. If the web chat configuration options change, it will also destroy the previous web chat and create a new one with the new configuration. It can also manage React portals for custom responses.
+The `WebChatContainer` function is a functional component that will load and render an instance of web chat when it is mounted and destroy that instance when unmounted. If the web chat configuration options change, it will also destroy the previous web chat and create a new one with the new configuration. It can also manage React portals for user defined responses.
 
 Note that this component will call the [web chat render](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-instance-methods#render) method for you. You do not need to call it yourself. You can use the `onBeforeRender` or `onAfterRender` prop to execute operations before or after render is called.
 
@@ -178,7 +182,7 @@ Note that this component will call the [web chat render](https://web-chat.global
 | instanceRef    | No      | MutableRefObject  | A convenience prop that is a reference to the web chat instance. This component will set the value of this ref using the `current` property when the instance has been created. |
 | onBeforeRender    | No      | function  | This is a callback function that is called after web chat has been loaded and before the `render` function is called. This function is passed a single argument which is the instance of web chat that was loaded. This function can be used to obtain a reference to the web chat instance if you want to make use of the instance methods that are available. |
 | onAfterRender    | No      | function  | This is a callback function that is called after web chat has been loaded and after the `render` function is called. This function is passed a single argument which is the instance of web chat that was loaded. This function can be used to obtain a reference to the web chat instance if you want to make use of the instance methods that are available. |
-| renderCustomResponse    | No      | function  | This function is a callback function that will be called by this container to render custom responses. If this prop is provided, then the container will listen for custom response events from web chat and will generate a React portal for each event. This function will be called once during component render for each custom response event. This function takes two arguments. The first is the [custom response event](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-events#customresponse) that triggered the custom response. The second is a convenience argument that is the instance of web chat. The function should return a `ReactNode` that renders the custom content for the response. |
+| renderUserDefinedResponse    | No      | function  | This function is a callback function that will be called by this container to render user defined responses. If this prop is provided, then the container will listen for user defined response events from web chat and will generate a React portal for each event. This function will be called once during component render for each user defined response event. This function takes two arguments. The first is the [user defined response event](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-events#userDefinedResponse) that triggered the user defined response. The second is a convenience argument that is the instance of web chat. The function should return a `ReactNode` that renders the user defined content for the response. |
 
 `WebChatCustomElement` inherits all of the props from `WebChatContainer`. It also has the following additional optional props.
 
