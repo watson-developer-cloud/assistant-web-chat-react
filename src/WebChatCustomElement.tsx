@@ -16,6 +16,11 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { WebChatContainer, WebChatContainerProps } from './WebChatContainer';
 import { WebChatInstance } from './types/WebChatInstance';
 
+const CUSTOM_ELEMENT_STYLES = `
+#WACContainer.WACContainer .HideWebChat { display: none }
+.CustomElementHideWebChat { width: 0; height: 0 }
+`;
+
 interface WebChatCustomElementProps extends WebChatContainerProps {
   /**
    * An optional classname that will be added to the custom element.
@@ -30,9 +35,8 @@ interface WebChatCustomElementProps extends WebChatContainerProps {
   /**
    * An optional listener for "view:change" events. Such a listener is required when using a custom element in order
    * to control the visibility of the web chat main window. If no callback is provided here, a default one will be
-   * used that just adds the classname "HideWebChat" when the main window is closed and removes it when the main
-   * window is opened. If you use the default, you will also need to add a
-   * "#WACContainer.WACContainer .HideWebChat { display: none }" rule to your CSS.
+   * used that injects styling into the app that will show and hide the web chat main window and also change the
+   * size of the custom element so it doesn't take up space when the main window is closed.
    *
    * You can provide a different callback here if you want custom behavior such as an animation when the main window
    * is opened or closed.
@@ -72,8 +76,10 @@ function WebChatCustomElement(props: WebChatCustomElementProps) {
        */
       function defaultViewChangeHandler(event: any, instance: WebChatInstance) {
         if (event.newViewState.mainWindow) {
+          customElement.classList.remove('CustomElementHideWebChat');
           instance.elements.getMainWindow().removeClassName('HideWebChat');
         } else {
+          customElement.classList.add('CustomElementHideWebChat');
           instance.elements.getMainWindow().addClassName('HideWebChat');
         }
       }
@@ -82,12 +88,13 @@ function WebChatCustomElement(props: WebChatCustomElementProps) {
 
       return onBeforeRender?.(instance);
     },
-    [onBeforeRender, onViewChange],
+    [onBeforeRender, onViewChange, customElement],
   );
 
   return (
     <>
       <div className={className} id={id} ref={setCustomElement} />
+      {!onViewChange && <style>{CUSTOM_ELEMENT_STYLES}</style>}
       {customElement && (
         <WebChatContainer config={useConfig} onBeforeRender={onBeforeRenderOverride} {...containerProps} />
       )}

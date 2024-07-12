@@ -131,9 +131,9 @@ function renderUserDefinedResponse(event) {
 
 ## WebChatCustomElement
 
-This library provides the component `WebChatCustomElement` which can be used to aid in render web chat inside a custom element. This is needed if you want to be able to change the location where web chat is rendered. This component will render an element in your React app and use that element as the custom element for rendering web chat. It will also the `WebChatContainer` component to manage the life cycle of web chat so you will use `WebChatCustomElement`.
+This library provides the component `WebChatCustomElement` which can be used to aid in rendering web chat inside a custom element. This is needed if you want to be able to change the location where web chat is rendered. This component will render an element in your React app and use that element as the custom element for rendering web chat.
 
-If you use this component, you will need to provide some CSS styles to control how the transition occurs between web chat showing and hiding. By default, the component will simply add a `HideWebChat` class to the web chat main window when it is closed. All you need to do is provide a `#WACContainer.WACContainer .HideWebChat { display: none }` rule in your CSS. You can also override the view change code is you need more fine-grained control over the style changes that occur. This would be useful if you wanted to animate the transitions.
+The default behavior of this component will add and remove a classname from the web chat main window as well as your custom element to control the visibility of web chat when it is opened or closed. It will also inject a `style` tag into your application to define the rules for these classnames. When web chat is closed, a classname will be added to the web chat main window to hide the element and a classname will be added to your custom element to set its width and height to 0 so it doesn't take up space. Note that the custom element should remain visible if you want to use the built-in web chat launcher which is also contained in your custom element. If you don't want these behaviors, then provide your own `onViewChange` prop to `WebChatCustomElement` and provide your own logic for controlling the visibility of web chat. If you want custom animations when web chat is opened and closed, this would be the mechanism to do that.
 
 The simplest example is this:
 
@@ -157,10 +157,6 @@ function App() {
   top: 100px;
   width: 500px;
   height: 500px;
-}
-
-#WACContainer.WACContainer .HideWebChat {
-  display: none;
 }
 ```
 
@@ -190,7 +186,7 @@ Note that this component will call the [web chat render](https://web-chat.global
 |-----------|---------|-------------|
 | className    | string  | An optional classname that will be added to the custom element. |
 | id    | string  | An optional id that will be added to the custom element. |
-| onViewChange    | function  | An optional listener for "view:change" events. Such a listener is required when using a custom element in order to control the visibility of the web chat main window. If no callback is provided here, a default one will be used that just adds the classname "HideWebChat" when the main window is closed and removes it when the main window is opened. If you use the default, you will also need to add a "#WACContainer.WACContainer .HideWebChat { display: none }" rule to your CSS. You can provide a different callback here if you want custom behavior such as an animation when the main window is opened or closed. Note that this function can only be provided before web chat is loaded. After web chat is loaded, the event handler will not be updated. See the web chat [view:change documentation](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-events#view:change) for more information. Also see the [tutorial for using animiations with custom elements](https://github.com/watson-developer-cloud/assistant-toolkit/tree/master/integrations/webchat/examples/custom-element/client/javascript-animation) for an example of what can be done here. |
+| onViewChange    | function  | An optional listener for "view:change" events. Such a listener is required when using a custom element in order to control the visibility of the web chat main window. If no callback is provided here, a default one will be used that uses some classnames to control web chat and your custom element. You can provide a different callback here if you want custom behavior such as an animation when the main window is opened or closed. Note that this function can only be provided before web chat is loaded. After web chat is loaded, the event handler will not be updated. See the web chat [view:change documentation](https://web-chat.global.assistant.watson.cloud.ibm.com/docs.html?to=api-events#view:change) for more information. Also see the [tutorial for using animiations with custom elements](https://github.com/watson-developer-cloud/assistant-toolkit/tree/master/integrations/webchat/examples/custom-element/client/javascript-animation) for an example of what can be done here. |
 
 ### Debugging
 
