@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2021, 2022.
+ * (C) Copyright IBM Corp. 2021, 2024.
  *
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,22 +12,9 @@
  *
  */
 
-import { withWebChat } from './withWebChat';
-import { AddedWithWebChatProps, WithWebChatConfig } from './types/WithWebChatTypes';
-import { CustomResponsePortalsContainer } from './CustomResponsePortalsContainer';
 import { WebChatContainer, setEnableDebug } from './WebChatContainer';
 import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
 import { WebChatCustomElement } from './WebChatCustomElement';
 
-export {
-  AddedWithWebChatProps,
-  CustomResponsePortalsContainer,
-  WebChatConfig,
-  WebChatContainer,
-  WebChatInstance,
-  withWebChat,
-  WithWebChatConfig,
-  setEnableDebug,
-  WebChatCustomElement,
-};
+export { WebChatConfig, WebChatContainer, WebChatInstance, setEnableDebug, WebChatCustomElement };

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2022.
+ * (C) Copyright IBM Corp. 2022, 2024.
  *
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,11 +12,12 @@
  *
  */
 
-import React, { ReactNode, useEffect, useState, MutableRefObject, useRef } from 'react';
-import { CustomResponsePortalsContainer } from './CustomResponsePortalsContainer';
+import React, { ReactNode, useEffect, useState, MutableRefObject, useRef, Dispatch, SetStateAction } from 'react';
+import semverCompare from 'semver-compare';
+import { UserDefinedResponsePortalsContainer } from './UserDefinedResponsePortalsContainer';
 import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
-import { CustomResponseEvent } from './types/CustomResponseEvent';
+import { UserDefinedResponseEvent } from './types/UserDefinedResponseEvent';
 
 // The default host URL where the production version of web chat is hosted.
 const DEFAULT_BASE_URL = 'https://web-chat.global.assistant.watson.appdomain.cloud';
@@ -41,6 +42,16 @@ interface ManagedWebChat {
   instance: WebChatInstance;
 }
 
+/**
+ * The type of the render function that is used to render user defined responses. This function should return a
+ * component that renders the display for the message contained in the given event.
+ *
+ * @param event The UserDefinedResponseEvent that was originally fired by web chat when the user defined response
+ * was first fired.
+ * @param instance The current instance of the web chat.
+ */
+type RenderUserDefinedResponse = (event: UserDefinedResponseEvent, instance: WebChatInstance) => ReactNode;
+
 interface WebChatContainerProps {
   /**
    * The config to use to load web chat. Note that the "onLoad" property is overridden by this component. If you
@@ -61,9 +72,9 @@ interface WebChatContainerProps {
   onAfterRender?: (instance: WebChatInstance) => Promise<void>;
 
   /**
-   * This is the function that this component will call when a custom response should be rendered.
+   * This is the function that this component will call when a user defined response should be rendered.
    */
-  renderCustomResponse?: (event: CustomResponseEvent, instance: WebChatInstance) => ReactNode;
+  renderUserDefinedResponse?: RenderUserDefinedResponse;
 
   /**
    * A convenience prop that is a reference to the web chat instance. This component will set the value of this ref
@@ -78,10 +89,9 @@ interface WebChatContainerProps {
 }
 
 /**
- * This is a component wrapper for using the withWebChat high-order-component as well as for providing support for
- * handling custom responses in portals.  This can be rendered anywhere in your application but you should make sure
- * it doesn't get unmounted during in the middle of your App's life or it will lose any custom responses that were
- * previously received.
+ * This is a component wrapper for web chat. This can be rendered anywhere in your application but you should make
+ * sure it doesn't get unmounted during in the middle of your App's life or it will lose any user defined responses
+ * that were previously received.
  *
  * Note that this container will override any config.onLoad property you have set. If you need access to the web
  * chat instance or need to perform additional customizations of web chat when it loads, use the onBeforeRender
@@ -90,13 +100,18 @@ interface WebChatContainerProps {
 function WebChatContainer({
   onBeforeRender,
   onAfterRender,
-  renderCustomResponse,
+  renderUserDefinedResponse,
   config,
   instanceRef,
   hostURL,
 }: WebChatContainerProps) {
   // A state value that contains the current instance of web chat.
   const [instance, setInstance] = useState<WebChatInstance>();
+
+  // This state will be used to record all the user defined response events that are fired from the widget. These
+  // events contain the HTML elements that we will attach our portals to as well as the messages that we wish to
+  // render in the message.
+  const [userDefinedResponseEvents, setUserDefinedResponseEvents] = useState<UserDefinedResponseEvent[]>([]);
 
   // The most recent web chat that was load by this component.
   const managedWebChatRef = useRef<ManagedWebChat>();
@@ -124,7 +139,15 @@ function WebChatContainer({
       logger(managedWebChat.webChatConfig, `Creating a new web chat due to configuration change.`);
 
       // Kick off the creation of a new web chat. This is multistep, asynchronous process.
-      loadWebChat(managedWebChat, hostURL, setInstance, instanceRef, onBeforeRender, onAfterRender).catch((error) => {
+      loadWebChat(
+        managedWebChat,
+        hostURL,
+        setInstance,
+        instanceRef,
+        onBeforeRender,
+        onAfterRender,
+        setUserDefinedResponseEvents,
+      ).catch((error) => {
         logger(managedWebChat.webChatConfig, 'An error occurred loading web chat', error);
         destroyWebChat(managedWebChat, setInstance, instanceRef);
       });
@@ -138,8 +161,14 @@ function WebChatContainer({
     return undefined;
   }, [config, hostURL]);
 
-  if (renderCustomResponse && instance) {
-    return <CustomResponsePortalsContainer webChatInstance={instance} renderResponse={renderCustomResponse} />;
+  if (renderUserDefinedResponse && instance) {
+    return (
+      <UserDefinedResponsePortalsContainer
+        webChatInstance={instance}
+        renderResponse={renderUserDefinedResponse}
+        userDefinedResponseEvents={userDefinedResponseEvents}
+      />
+    );
   }
 
   return null;
@@ -155,6 +184,7 @@ async function loadWebChat(
   instanceRef: MutableRefObject<WebChatInstance>,
   onBeforeRender: (instance: WebChatInstance) => Promise<void>,
   onAfterRender: (instance: WebChatInstance) => Promise<void>,
+  setUserDefinedResponseEvents: Dispatch<SetStateAction<UserDefinedResponseEvent[]>>,
 ) {
   const { webChatConfig } = managedWebChat;
 
@@ -180,6 +210,10 @@ async function loadWebChat(
   };
   const instance = await window.loadWatsonAssistantChat(configWithoutOnLoad);
 
+  // Even if it doesn't end up being used, we need to add a userDefinedResponse listener now so we can ensure that
+  // we catch any events that may be fired during the render call (like the welcome message).
+  addUserDefinedResponseHandler(instance, setUserDefinedResponseEvents);
+
   // Once the instance is created, call the onBeforeRender and then render and then onAfterRender.
   await onBeforeRender?.(instance);
   logger(webChatConfig, `Calling render.`);
@@ -197,6 +231,33 @@ async function loadWebChat(
     logger(webChatConfig, `Destroying web chat after an instance is created but before calling onLoad.`);
     destroyWebChat(managedWebChat, setInstance, instanceRef);
   }
+}
+
+/**
+ * Adds a "userDefinedResponse" event listener to the given web chat instance that will use the given set function
+ * to add new events to the list.
+ */
+function addUserDefinedResponseHandler(
+  webChatInstance: WebChatInstance,
+  setUserDefinedResponseEvents: Dispatch<SetStateAction<UserDefinedResponseEvent[]>>,
+) {
+  // This handler will fire each time a user defined response occurs and we will update our state by appending the
+  // event to the end of our events list. We have to make sure to create a new array in order to trigger a re-render.
+  function userDefinedResponseHandler(event: UserDefinedResponseEvent) {
+    setUserDefinedResponseEvents((eventsArray) => eventsArray.concat(event));
+  }
+
+  // Also make sure to clear the list if a restart occurs.
+  function restartHandler() {
+    setUserDefinedResponseEvents([]);
+  }
+
+  // In web chat 8.2.0, the "customResponse" event was renamed to "userDefinedResponse".
+  const webChatVersion = webChatInstance.getWidgetVersion();
+  const eventName = semverCompare(webChatVersion, '8.2.0') >= 0 ? 'userDefinedResponse' : 'customResponse';
+
+  webChatInstance.on({ type: eventName, handler: userDefinedResponseHandler });
+  webChatInstance.on({ type: 'restartConversation', handler: restartHandler });
 }
 
 /**
@@ -241,13 +302,23 @@ function logger(webChatConfig: WebChatConfig, ...args: unknown[]) {
 }
 
 /**
+ * Removes any trailing slash from the given string.
+ */
+function removeTrailingSlash(value: string) {
+  return value.replace(/\/$/, '');
+}
+
+/**
  * Ensures that the javascript for web chat has been loaded.
  */
 async function ensureWebChatScript(webChatConfig: WebChatConfig, hostURL: string) {
-  const useURL = hostURL || DEFAULT_BASE_URL;
-  const scriptURL = `${useURL.replace(/\/$/, '')}/versions/${
-    webChatConfig.clientVersion || 'latest'
-  }/WatsonAssistantChatEntry.js`;
+  let useURL = DEFAULT_BASE_URL;
+  if (hostURL) {
+    useURL = removeTrailingSlash(hostURL);
+  } else if (webChatConfig.cloudPrivateHostURL) {
+    useURL = `${removeTrailingSlash(webChatConfig.cloudPrivateHostURL)}/static/webchat`;
+  }
+  const scriptURL = `${useURL}/versions/${webChatConfig.clientVersion || 'latest'}/WatsonAssistantChatEntry.js`;
 
   const loadedWebChatURL = (window as any).wacWebChatContainerScriptURL;
   if (loadedWebChatURL && loadedWebChatURL !== scriptURL) {
@@ -273,4 +344,4 @@ async function ensureWebChatScript(webChatConfig: WebChatConfig, hostURL: string
   return (window as any).wacWebChatContainerScriptPromise;
 }
 
-export { setEnableDebug, WebChatContainer, WebChatContainerProps, ensureWebChatScript };
+export { setEnableDebug, WebChatContainer, WebChatContainerProps, ensureWebChatScript, RenderUserDefinedResponse };

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2022.
+ * (C) Copyright IBM Corp. 2022, 2024.
  *
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -17,7 +17,7 @@ import { render } from '@testing-library/react';
 import { WebChatContainer, WebChatContainerProps } from '../WebChatContainer';
 import { TEST_INSTANCE_CONFIG, waitForFind, waitForWebChat } from '../test/testUtils';
 import { WebChatInstance } from '../types/WebChatInstance';
-import { CustomResponseEvent } from '../types/CustomResponseEvent';
+import { UserDefinedResponseEvent } from '../types/UserDefinedResponseEvent';
 
 jest.setTimeout(20000);
 
@@ -57,14 +57,14 @@ describe('WebChatContainer', () => {
     await waitForWebChat(findAllByPlaceholderText);
   });
 
-  it('tests that the component renders custom responses', async () => {
+  it('tests that the component renders user defined responses', async () => {
     const instanceRef: MutableRefObject<WebChatInstance> = { current: null };
     let webChatInstance: WebChatInstance;
     let webChatAfterInstance: WebChatInstance;
 
-    // We'll use this map to assign a unique number to each event so we can generate a unique custom response for
+    // We'll use this map to assign a unique number to each event so we can generate a unique user defined response for
     // each message and make sure they are rendered correctly.
-    const eventMap = new Map<CustomResponseEvent, number>();
+    const eventMap = new Map<UserDefinedResponseEvent, number>();
 
     const onBeforeRender: WebChatContainerProps['onBeforeRender'] = async (instance) => {
       webChatInstance = instance;
@@ -74,13 +74,13 @@ describe('WebChatContainer', () => {
       webChatAfterInstance = instance;
     };
 
-    const renderCustomResponse: WebChatContainerProps['renderCustomResponse'] = (event) => {
+    const renderUserDefinedResponse: WebChatContainerProps['renderUserDefinedResponse'] = (event) => {
       let count = eventMap.get(event);
       if (!count) {
         count = eventMap.size + 1;
         eventMap.set(event, count);
       }
-      return <div>This is a custom response! Count: {count}.</div>;
+      return <div>This is a user defined response! Count: {count}.</div>;
     };
 
     const component = (
@@ -88,7 +88,7 @@ describe('WebChatContainer', () => {
         config={TEST_INSTANCE_CONFIG}
         onBeforeRender={onBeforeRender}
         onAfterRender={onAfterRender}
-        renderCustomResponse={renderCustomResponse}
+        renderUserDefinedResponse={renderUserDefinedResponse}
         instanceRef={instanceRef}
       />
     );
@@ -96,18 +96,18 @@ describe('WebChatContainer', () => {
 
     await waitForWebChat(findAllByPlaceholderText);
 
-    // Send a message to get the first custom response.
-    webChatInstance.send({ input: { text: 'custom response' } });
+    // Send a message to get the first user defined response.
+    webChatInstance.send({ input: { text: 'user defined response' } });
 
-    await waitForFind('This is a custom response! Count: 1.', findAllByText);
-    expect(queryAllByText('This is a custom response! Count: 2.', { exact: false }).length).toEqual(0);
+    await waitForFind('This is a user defined response! Count: 1.', findAllByText);
+    expect(queryAllByText('This is a user defined response! Count: 2.', { exact: false }).length).toEqual(0);
 
-    // Send a message to get the second custom response and make sure both custom responses appear.
-    webChatInstance.send({ input: { text: 'custom response' } });
+    // Send a message to get the second user defined response and make sure both user defined responses appear.
+    webChatInstance.send({ input: { text: 'user defined response' } });
 
-    await waitForFind('This is a custom response! Count: 2.', findAllByText);
-    await waitForFind('This is a custom response! Count: 1.', findAllByText);
-    expect(queryAllByText('This is a custom response! Count: 3.', { exact: false }).length).toEqual(0);
+    await waitForFind('This is a user defined response! Count: 2.', findAllByText);
+    await waitForFind('This is a user defined response! Count: 1.', findAllByText);
+    expect(queryAllByText('This is a user defined response! Count: 3.', { exact: false }).length).toEqual(0);
 
     expect(instanceRef.current).toBe(webChatInstance);
     expect(instanceRef.current).toBe(webChatAfterInstance);

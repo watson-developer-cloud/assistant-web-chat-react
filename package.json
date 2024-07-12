@@ -41,6 +41,7 @@
     "@types/proper-url-join": "^2.1.1",
     "@types/react": "^16.14.17",
     "@types/react-dom": "^16.9.14",
+    "@types/semver-compare": "^1.0.3",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
     "babel-core": "^6.26.3",
@@ -83,5 +84,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "semver-compare": "^1.0.0"
   }
 }

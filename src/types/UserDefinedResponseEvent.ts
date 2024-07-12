@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2022.
+ * (C) Copyright IBM Corp. 2022, 2024.
  *
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,23 +13,24 @@
  */
 
 /**
- * This represents an event that is fired when web chat receives a custom response (response_type = "user_defined").
+ * This represents an event that is fired when web chat receives a user defined response (response_type =
+ * "user_defined").
  */
-interface CustomResponseEvent {
+interface UserDefinedResponseEvent {
   /**
    * The type of the event.
    */
-  type: 'customResponse';
+  type: 'userDefinedResponse';
 
   data: {
     /**
-     * The item within the MessageResponse.output.generic array that this custom response is for.
+     * The item within the MessageResponse.output.generic array that this user defined response is for.
      */
     message: unknown;
 
     /**
-     * The full MessageResponse that this custom response is fired for. A MessageResponse may contain multiple items
-     * and an event will be fired for each.
+     * The full MessageResponse that this user defined response is fired for. A MessageResponse may contain multiple
+     * items and an event will be fired for each.
      */
     fullMessage: unknown;
 
@@ -40,4 +41,4 @@ interface CustomResponseEvent {
   };
 }
 
-export { CustomResponseEvent };
+export { UserDefinedResponseEvent };
