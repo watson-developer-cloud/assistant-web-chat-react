@@ -14,7 +14,6 @@ The primary utility provided by this library is the `WebChatContainer` functiona
 - [Using WebChatContainer](#using-webchatcontainer)
 - [WebChatCustomElement](#webchatcustomelement)
 - [API](#api)
-- [withWebChat](#withWebChat)
 - [Additional resources](#additional-resources)
 - [License](#license)
 
@@ -199,10 +198,6 @@ function App() {
   return <WebChatContainer config={webChatOptions} />;
 }
 ```
-
-## withWebChat
-
-The [withWebChat](WITH_WEB_CHAT.MD) function is an older function that is used for loading web chat. It is now deprecated in favor of using the `WebChatContainer` component instead.
 
 ## Additional resources
 - [IBM watsonx Assistant](https://www.ibm.com/cloud/watson-assistant)

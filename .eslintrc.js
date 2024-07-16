@@ -47,6 +47,7 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/jsx-props-no-spreading': 'off',
     'no-use-before-define': 'off',
+    'import/no-extraneous-dependencies': 'off',
     // Airbnb allows arrow functions but not regular functions which doesn't make any sense.
     'react/jsx-no-bind': 'off',
     // This rule is annoying and sometimes just wrong.

@@ -12,8 +12,8 @@
  *
  */
 
+import { compareVersions } from 'compare-versions';
 import React, { ReactNode, useEffect, useState, MutableRefObject, useRef, Dispatch, SetStateAction } from 'react';
-import semverCompare from 'semver-compare';
 import { UserDefinedResponsePortalsContainer } from './UserDefinedResponsePortalsContainer';
 import { WebChatConfig } from './types/WebChatConfig';
 import { WebChatInstance } from './types/WebChatInstance';
@@ -254,7 +254,7 @@ function addUserDefinedResponseHandler(
 
   // In web chat 8.2.0, the "customResponse" event was renamed to "userDefinedResponse".
   const webChatVersion = webChatInstance.getWidgetVersion();
-  const eventName = semverCompare(webChatVersion, '8.2.0') >= 0 ? 'userDefinedResponse' : 'customResponse';
+  const eventName = compareVersions(webChatVersion, '8.2.0') >= 0 ? 'userDefinedResponse' : 'customResponse';
 
   webChatInstance.on({ type: eventName, handler: userDefinedResponseHandler });
   webChatInstance.on({ type: 'restartConversation', handler: restartHandler });
