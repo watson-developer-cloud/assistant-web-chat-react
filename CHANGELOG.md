@@ -1,3 +1,26 @@
+# [2.0.0](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.1.1...v2.0.0) (2024-07-17)
+
+
+### Bug Fixes
+
+* made some changes and fixes ([#27](https://github.com/watson-developer-cloud/assistant-web-chat-react/issues/27)) ([182d185](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/182d185aecd4011a304dd44fbe828f6b8c7c5183))
+* made some changes to fix custom elements not being sized correctly ([#28](https://github.com/watson-developer-cloud/assistant-web-chat-react/issues/28)) ([13ef8f7](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/13ef8f7308f46874e005d8993fe49361be8402f3))
+
+
+### BREAKING CHANGES
+
+* Classnames and styles are now injected by default when using WebChatCustomElement.
+* Removed the deprecated withWebChat hook.
+* Renamed the "renderCustomResponse" prop to "renderUserDefinedResponse".
+* Removed the CustomResponsePortalsContainer component.
+
+- Added support for the "userDefinedResponse" event added in web chat 8.2.0.
+- Fixed an order bug that can occur if a user defined response is fired during the render process
+  in some cases. This meant reworking the portals container interface which was a breaking change
+  and we decided to just remove it from the public API.
+- Added support for usages on cp4d so the library will properly calculate the endpoints for the
+  web chat entry script.
+
 ## [1.1.1](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.1.0...v1.1.1) (2023-11-20)
 
 
