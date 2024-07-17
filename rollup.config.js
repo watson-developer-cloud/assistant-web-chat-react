@@ -13,6 +13,7 @@
  */
 
 import typescript from 'rollup-plugin-typescript2';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 import pkg from './package.json';
 
@@ -28,6 +29,6 @@ export default {
       format: 'es',
     },
   ],
-  plugins: [typescript()],
+  plugins: [typescript(), nodeResolve()],
   external: ['react', 'react-dom'],
 };
