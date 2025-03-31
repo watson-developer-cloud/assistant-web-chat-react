@@ -21,7 +21,22 @@ import { UserDefinedResponseEvent } from '../types/UserDefinedResponseEvent';
 
 jest.setTimeout(20000);
 
+class ResizeObserverMock {
+  observe = jest.fn();
+
+  unobserve = jest.fn();
+
+  disconnect = jest.fn();
+}
+
 describe('WebChatContainer', () => {
+  beforeAll(() => {
+    Object.defineProperty(window, 'ResizeObserver', {
+      writable: true,
+      configurable: true,
+      value: ResizeObserverMock,
+    });
+  });
   it('tests that the component loads web chat', async () => {
     const component = <WebChatContainer config={TEST_INSTANCE_CONFIG} />;
     const { findAllByPlaceholderText } = render(component);
