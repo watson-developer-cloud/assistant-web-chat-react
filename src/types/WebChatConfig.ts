@@ -28,7 +28,7 @@ interface WebChatConfig {
    * Which data center your integration was created in. e.g. 'us-south', 'us-east', 'jp-tok' 'au-syd', 'eu-gb',
    * 'eu-de', etc.
    */
-  region: 'local' | 'dev' | 'staging' | 'us-south' | 'us-east' | 'jp-tok' | 'au-syd' | 'eu-gb' | 'eu-de' | 'kr-seo';
+  region: string;
 
   /**
    * The service instance ID of the Assistant hosting your web chat integration.
