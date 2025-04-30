@@ -27,8 +27,6 @@ jobs:
       with:
         persist-credentials: false
         fetch-depth: 0
-    - name: Disable Husky for this repo
-      run: rm -rf .git/hooks
     - name: Set up Node and Build for Deploy
       uses: actions/setup-node@v3
       with:
