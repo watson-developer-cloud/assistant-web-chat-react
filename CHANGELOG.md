@@ -1,3 +1,14 @@
+## [2.0.1](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v2.0.0...v2.0.1) (2025-04-30)
+
+
+### Bug Fixes
+
+* update workflow ([b46403b](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/b46403be05ebb33225882bc189711bfb5d10923a))
+* update workflow 2 ([5ac754a](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/5ac754a5fbd6e236c6e1d386f0e41e5f1726ae7d))
+* update workflow 3 ([8b11579](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/8b115796e14a6d94357e091834227d2be3155625))
+* update workflow 4 ([b3bbeaf](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/b3bbeafd92f94208648677a78c6f79264e7c0365))
+* updated data center region type. ([#33](https://github.com/watson-developer-cloud/assistant-web-chat-react/issues/33)) ([3a4f4af](https://github.com/watson-developer-cloud/assistant-web-chat-react/commit/3a4f4aff844ccd462c168cbeb8b9d7c726052264))
+
 # [2.0.0](https://github.com/watson-developer-cloud/assistant-web-chat-react/compare/v1.1.1...v2.0.0) (2024-07-17)
 
 
