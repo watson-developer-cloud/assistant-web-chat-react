@@ -128,6 +128,118 @@ function renderUserDefinedResponse(event) {
 }
 ```
 
+### A note on config objects creating multiple web chat instances
+
+The `WebChatContainer` component will destroy the current instance of web chat and create a new one if the config object changes. This check is a strict equal check on the config object itself; it does not compare the properties inside of the config object. A common pitfall to fall into is creating the config object inside the component and passing it to `WebChatContainer`. This will cause the container to destroy and recreate the web chat instance every time the component renders because the config object will change.
+
+Here's an example:
+```javascript
+import React, { useState } from 'react';
+import { WebChatContainer, setEnableDebug } from '@ibm-watson/assistant-web-chat-react';
+
+// Enable debugging so we can see what WebChatContainer is doing.
+setEnableDebug(true);
+
+function App() {
+  const [value, setValue] = useState(0);
+
+  const config = {
+    integrationID: 'XXX',
+    region: 'XXX',
+    serviceInstanceID: 'XXX',
+  };
+
+  return (
+    <div>
+      <button type="button" onClick={() => setValue(value + 1)}>
+        Value: {value}
+      </button>
+      <WebChatContainer config={config} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+If you click the button in this example, it will trigger a re-render of the component and if you look in the console output you will see the following message (because of `setEnableDebug(true)`):
+```
+[IBM watsonx Assistant WebChatContainer] Creating a new web chat due to configuration change.
+```
+
+The quick solution to this is to move the config object outside of the component:
+```javascript
+import React, { useState } from 'react';
+import { WebChatContainer, setEnableDebug } from '@ibm-watson/assistant-web-chat-react';
+
+setEnableDebug(true);
+
+const config = {
+  integrationID: 'XXX',
+  region: 'XXX',
+  serviceInstanceID: 'XXX',
+};
+
+function App() {
+  const [value, setValue] = useState(0);
+
+  return (
+    <div>
+      <button type="button" onClick={() => setValue(value + 1)}>
+        Value: {value}
+      </button>
+      <WebChatContainer config={config} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+However this may not always be feasible because you may have a use case where the config object is not static but contains data that is passed into your component from outside. In that case, you will need to memoize the config object to avoid creating a new one unnecessarily. Also be careful with properties that are functions such as the `onError` property. Those properties need to be memoized as well, usually by using `useCallback`.
+
+```javascript
+import React, { useState, useMemo } from 'react';
+import { WebChatContainer, setEnableDebug } from '@ibm-watson/assistant-web-chat-react';
+
+setEnableDebug(true);
+
+function MyComponent({ integrationID, region, serviceInstanceID }) {
+  const [value, setValue] = useState(0);
+
+  // Only create a new config object when the configuration properties change.
+  const config = useMemo(
+    () => ({
+      integrationID,
+      region,
+      serviceInstanceID,
+    }),
+    [integrationID, region, serviceInstanceID],
+  );
+
+  return (
+    <div>
+      <button type="button" onClick={() => setValue(value + 1)}>
+        Value: {value}
+      </button>
+      <WebChatContainer config={config} />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <MyComponent
+      integrationID="XXX"
+      region="us-south"
+      serviceInstanceID="XXX"
+    />
+  );
+}
+
+export default App;
+```
+
 ## WebChatCustomElement
 
 This library provides the component `WebChatCustomElement` which can be used to aid in rendering web chat inside a custom element. This is needed if you want to be able to change the location where web chat is rendered. This component will render an element in your React app and use that element as the custom element for rendering web chat.
